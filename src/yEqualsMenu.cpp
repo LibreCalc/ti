@@ -28,7 +28,7 @@ YEqualsMenu::YEqualsMenu(CharPutter* putt,TiConfig *conf)
  _equ2=""; 
  _equ3=""; 
  _equ3="";*/ 
- _currentEqu=1;
+ _currentEqu=0;
  _currentCursPos=0;
  _currentDisplayoffset=0;
 }
@@ -50,10 +50,20 @@ else
 int y=1-_currentDisplayoffset;
  _putt->clear();
  string smallfour;smallfour.push_back(CONST_CHAR_SMALL4);
+ string smallfive;smallfive.push_back(CONST_CHAR_SMALL5); 
+ string smallsix;smallsix.push_back(CONST_CHAR_SMALL6); 
+ string smallseven;smallseven.push_back(CONST_CHAR_SMALL7);  
+ string smallheight;smallheight.push_back(CONST_CHAR_SMALL8);  
+ string smallnine;smallnine.push_back(CONST_CHAR_SMALL9);   
   y=_putt->putString(":Y&="+_conf->getFunctionsToPlot(0).toStdString()+" ",1,y); 
   y=_putt->putString(":Y~="+_conf->getFunctionsToPlot(1).toStdString()+" ",1,y); 
   y=_putt->putString(":Y#="+_conf->getFunctionsToPlot(2).toStdString()+" ",1,y); 
   y=_putt->putString(":Y"+smallfour+"="+_conf->getFunctionsToPlot(3).toStdString()+" ",1,y); 
+  y=_putt->putString(":Y"+smallfive+"="+_conf->getFunctionsToPlot(4).toStdString()+" ",1,y);  
+  y=_putt->putString(":Y"+smallsix+"="+_conf->getFunctionsToPlot(5).toStdString()+" ",1,y); 
+  y=_putt->putString(":Y"+smallseven+"="+_conf->getFunctionsToPlot(6).toStdString()+" ",1,y); 
+  y=_putt->putString(":Y"+smallheight+"="+_conf->getFunctionsToPlot(7).toStdString()+" ",1,y);  
+  y=_putt->putString(":Y"+smallnine+"="+_conf->getFunctionsToPlot(8).toStdString()+" ",1,y);  
   _putt->blink(getPointerX(),getPointerY()-_currentDisplayoffset);
   _putt->refreshScreen();
 }
@@ -77,17 +87,7 @@ TiString & eq=getEqu(_currentEqu);
 
 TiString& YEqualsMenu::getEqu(int no)
 {
-switch (_currentEqu)
-    {
-  case 1:
-    return _conf->getFunctionsToPlot(0);
-  case 2:
-    return _conf->getFunctionsToPlot(1);
-   case 3:
-    return _conf->getFunctionsToPlot(2);
-      case 4:
-    return _conf->getFunctionsToPlot(3);
-    }
+    return _conf->getFunctionsToPlot(_currentEqu);
 }
 
 
@@ -95,18 +95,18 @@ void YEqualsMenu::changeEqu(bool up)
 {
  if (up)
  {
-  if (_currentEqu>1)
+  if (_currentEqu>0)
   {
    _currentEqu--;
-   _currentCursPos=getEqu(_currentEqu).size();
+   _currentCursPos=0;
   } 
  }
  else
  {
-     if (_currentEqu<4)
+     if (_currentEqu<9)
   {
    _currentEqu++;
-   _currentCursPos=getEqu(_currentEqu).size();
+   _currentCursPos=0;
   } 
  }
  reDisplay();
@@ -132,12 +132,10 @@ int YEqualsMenu::getPointerY()
 {
     TiString & eq=getEqu(_currentEqu);
   int res=0;
-if (_currentEqu>1)
-  res+=(_conf->getFunctionsToPlot(1).toStdString().size()+3)/16+1;
-if (_currentEqu>2)
-  res+=(_conf->getFunctionsToPlot(2).toStdString().size()+3)/16+1;
-if (_currentEqu>3)
-  res+=(_conf->getFunctionsToPlot(3).toStdString().size()+3)/16+1;
+  for (int i=0;i<8;i++)
+    if (_currentEqu>i)
+      res+=(_conf->getFunctionsToPlot(i).toStdString().size()+3)/16+1;
+
 res+=1+(eq.getCursorPosInStdStr(_currentCursPos)+4)/16;
 return res;
 }

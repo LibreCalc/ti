@@ -15,10 +15,17 @@
  */
 
 #include "tiString.h"
-
+#include "keyParser.h"
 
 map<specialChars,string> init_const()
 {
+   string smallfour;smallfour.push_back(CONST_CHAR_SMALL4);
+ string smallfive;smallfive.push_back(CONST_CHAR_SMALL5); 
+ string smallsix;smallsix.push_back(CONST_CHAR_SMALL6); 
+ string smallseven;smallseven.push_back(CONST_CHAR_SMALL7);  
+ string smallheight;smallheight.push_back(CONST_CHAR_SMALL8);  
+ string smallnine;smallnine.push_back(CONST_CHAR_SMALL9); 
+ 
   map<specialChars,string> res;
   res.insert(pair<specialChars,string>(CONST_SPE_SIN,string("sin(")));
   res.insert(pair<specialChars,string>(CONST_SPE_IF,string("If ")));
@@ -40,12 +47,35 @@ map<specialChars,string> init_const()
   res.insert(pair<specialChars,string>(CONST_SPE_REPEAT,string("Repeat ")));  
   res.insert(pair<specialChars,string>(CONST_SPE_ANS,string("Ans")));
   res.insert(pair<specialChars,string>(CONST_SPE_RAND,string("RAND")));  
+  res.insert(pair<specialChars,string>(CONST_SPE_ROUND,string("Round(")));   
   res.insert(pair<specialChars,string>(CONST_SPE_INT,string("int(")));  
   res.insert(pair<specialChars,string>(CONST_SPE_DELVAR,string("DelVar")));  
   res.insert(pair<specialChars,string>(CONST_SPE_DISP,string("Disp(")));  
   res.insert(pair<specialChars,string>(CONST_SPE_RETURN,string("Return ")));
   res.insert(pair<specialChars,string>(CONST_SPE_MENU,string("Menu("))); 
-  res.insert(pair<specialChars,string>(CONST_SPE_DIM,string("Dim(")));   
+  res.insert(pair<specialChars,string>(CONST_SPE_DIM,string("Dim(")));  
+  res.insert(pair<specialChars,string>(CONST_SPE_FILL,string("Fill(")));
+  res.insert(pair<specialChars,string>(CONST_SPE_CLRLIST,string("ClrList "))); 
+  res.insert(pair<specialChars,string>(CONST_SPE_INPUT,string("Input ")));  
+  res.insert(pair<specialChars,string>(CONST_SPE_STOP,string("Stop ")));    
+  res.insert(pair<specialChars,string>(CONST_SPE_L1,string("L&")));  
+  res.insert(pair<specialChars,string>(CONST_SPE_L2,string("L~")));  
+  res.insert(pair<specialChars,string>(CONST_SPE_L3,string("L#")));
+  res.insert(pair<specialChars,string>(CONST_SPE_L4,string("L")+smallfour)); 
+  res.insert(pair<specialChars,string>(CONST_SPE_L5,string("L")+smallfive));  
+  res.insert(pair<specialChars,string>(CONST_SPE_L6,string("L")+smallsix));
+  res.insert(pair<specialChars,string>(CONST_SPE_L7,string("L")+smallseven)); 
+  res.insert(pair<specialChars,string>(CONST_SPE_L8,string("L")+smallheight)); 
+  res.insert(pair<specialChars,string>(CONST_SPE_L9,string("L")+smallnine));   
+  res.insert(pair<specialChars,string>(CONST_SPE_MATA,string("[[A]]"))); 
+  res.insert(pair<specialChars,string>(CONST_SPE_MATB,string("[[B]]"))); 
+  res.insert(pair<specialChars,string>(CONST_SPE_MATC,string("[[C]]")));  
+  res.insert(pair<specialChars,string>(CONST_SPE_MATD,string("[[D]]"))); 
+  res.insert(pair<specialChars,string>(CONST_SPE_MATE,string("[[E]]")));    
+  res.insert(pair<specialChars,string>(CONST_SPE_MATF,string("[[F]]")));    
+  res.insert(pair<specialChars,string>(CONST_SPE_MATG,string("[[G]]")));  
+  res.insert(pair<specialChars,string>(CONST_SPE_MATH,string("[[H]]")));  
+  res.insert(pair<specialChars,string>(CONST_SPE_MATI,string("[[I]]")));    
   return res;
 }
 

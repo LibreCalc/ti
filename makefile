@@ -4,7 +4,7 @@ SDL = `sdl-config --cflags --libs`
 #choix des inclusions
 
 
-ti:obj/charPutter.o obj/main.o obj/yEqualsMenu.o obj/curveViewer.o obj/handlePixels.o obj/mainScreen.o obj/evalFormula.o obj/keyParser.o obj/tiConfig.o  obj/tiString.o obj/tiBasicParser.o obj/83pReadWrite.o obj/menu.o obj/tiVariant.o
+ti:obj/charPutter.o obj/main.o obj/yEqualsMenu.o obj/curveViewer.o obj/handlePixels.o obj/mainScreen.o obj/evalFormula.o obj/keyParser.o obj/tiConfig.o  obj/tiString.o obj/tiBasicParser.o obj/83pReadWrite.o obj/menu.o obj/tiVariant.o obj/commandsHandler.o obj/curveRangeEditor.o
 	$(CP) $(SDL) $^ -o $@ -lm
 
 obj/main.o: src/main.cpp
@@ -34,7 +34,11 @@ obj/83pReadWrite.o: src/83pReadWrite.cpp
 obj/menu.o: src/menu.cpp
 	$(CP) src/menu.cpp -o $@ -c	
 obj/tiVariant.o: src/tiVariant.cpp
-	$(CP) src/tiVariant.cpp -o $@ -c	
+	$(CP) src/tiVariant.cpp -o $@ -c
+obj/commandsHandler.o: src/commandsHandler.cpp
+	$(CP) src/commandsHandler.cpp -o $@ -c
+obj/curveRangeEditor.o: src/curveRangeEditor.cpp
+	$(CP) src/curveRangeEditor.cpp -o $@ -c
 	
 count:
 	find . -iname "*.cpp" -exec grep -vE '^#' {} \; | wc -l

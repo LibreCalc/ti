@@ -28,7 +28,6 @@ using namespace evalFormula;
 
 TiVariant eval(TiString s, TiVariant x, TiConfig& config)
 {
-
   
   while (s.size()>0 and s[0]==' ')
     s.erase(0);
@@ -56,17 +55,21 @@ TiVariant eval(TiString s, TiVariant x, TiConfig& config)
  if (s.size()==1 and s[0]==CONST_SPE_ANS)
    return config.getAns();
  
+
+ 
    /*---------------------------------------------------
   * S'il s'agit d'une valeur de variable pré enregistré on la retourne
   * --------------------------------------------------*/
   if (s.size()==1 and config.isVariable(s[0]))
     return config.getVariableValue(s[0]);
   
-   /*---------------------------------------------------
+    /*---------------------------------------------------
   * S'il s'agit de RAND
   * --------------------------------------------------*/
  if (s.size()==1 and s[0]==CONST_SPE_RAND)
-   return TiVariant(1.0*rand()/RAND_MAX);
+ {
+   return TiVariant(double(1.0*rand()/RAND_MAX));
+ }
  
    /*-------------------------------------------
   *  Check small minus
@@ -85,7 +88,9 @@ TiVariant eval(TiString s, TiVariant x, TiConfig& config)
   if (isSuroundedByParFct(s,CONST_SPE_NOT))
     return  TiVariant(!(eval(s.subString(1,s.size()-1),x,config).toDouble()));
   if (isSuroundedByParFct(s,CONST_SPE_INT))
-   { double val=eval(s.subString(1,s.size()-1),x,config).toDouble();return  int(val)-(val<0);}
+   { double val=eval(s.subString(1,s.size()-1),x,config).toDouble();return  TiVariant(int(val)-(val<0));}
+  if (isSuroundedByParFct(s,CONST_SPE_ROUND))
+   { double val=eval(s.subString(1,s.size()-1),x,config).toDouble();return  TiVariant(round(val));}   
   if (isSuroundedByParFct(s,CONST_SPE_DIM))
     return  eval(s.subString(1,s.size()-1),x,config).getDim();
  
@@ -241,6 +246,44 @@ TiVariant eval(TiString s, TiVariant x, TiConfig& config)
  if (s.size()>1 and s[0]==CONST_SPE_ANS )
    return config.getAns()*eval(s.subString(1,s.size()),x,config);
  
+    /*---------------------------------------------------
+  * S'il s'agit d'une valeur de variable Accés case tableau
+  * --------------------------------------------------*/
+    if (s.size()>2 and config.isVariable(s[0]) and s[1]=='(')
+    {
+      //On vérifie qu'il n'y a pas d'autre parenthèses pour assombrir l'analyse
+        bool isOtherParenthesis=false;
+        for (int i=2; i<s.size(); i++)
+            if (s[i]=='(')
+                isOtherParenthesis=true;
+	//S'il n'y en a pas on traite l'accés à la case
+        if (!isOtherParenthesis)
+        {
+            TiString s2= s.subString(2,s.size());
+            if (s2[s2.size()-1]==')')
+                s2.erase(s2.size()-1);
+            vector<TiString> strs=evalFormula::ParseComas(s2);
+            //List
+            if (strs.size()==1)
+            {
+		
+                int pos=eval(s2,config.getVariableValue('X'),config).toDouble();
+		if (config.getVariable(s[0]).isList())
+		  return config.getVariable(s[0])[pos-1];
+            }
+
+            //Matrices
+            if (strs.size()==2)
+            {
+                int posi=eval(strs[0],config.getVariableValue('X'),config).toDouble();
+                int posj=eval(strs[1],config.getVariableValue('X'),config).toDouble();
+		if (config.getVariable(s[0]).isMatrix())
+		    return config.getVariable(s[0]).accesMatrixValue(posi,posj);
+            }
+
+        }
+    }
+  
    /*---------------------------------------------------
   * S'il s'agit d'une valeur de variable pré enregistré on la retourne
   * --------------------------------------------------*/
@@ -269,6 +312,17 @@ TiVariant eval(TiString s, TiVariant x, TiConfig& config)
   if(tmpStr.size()>0 and isNumber(tmpStr,number))
   {
   return TiVariant(number)*eval(s.subString(i,s.size()),x,config);
+  }
+  
+     /*---------------------------------------------------
+  *Handle "(a+b)(c+d)"
+  * --------------------------------------------------*/
+  //TODO WARNINGmor check would me necessary
+  for (int i=1;i<s.size()-2;i++)
+  {
+   if (s[i]==')' and s[i+1]=='(')
+     return eval(s.subString(0,i+1),x,config)
+    *eval(s.subString(i+1,s.size()),x,config);
   }
   
   return TiVariant(-1);
@@ -425,13 +479,16 @@ bool evalFormula::isString(TiString s, string& theString)
     if (s.size()<2)
 	return false;
 	 
-    if (s[0]=='\"' and s[s.size()-1]=='\"')
+    if (s[0]=='\"' )
     {
-      for (int i=0;i<s.size();i++)
-	if (s[i]>256)
+      for (int i=1;i<s.size()-1;i++)
+	if (s[i]>256 or s[i]=='\"')
 	  return false;
       string tmp=s.toStdString();
-      theString=tmp.substr(1,tmp.size()-2);
+      if (s[s.size()-1]=='\"')
+	  theString=tmp.substr(1,tmp.size()-2);
+      else
+	theString=tmp.substr(1,tmp.size()-1);
       return true;
     }
     return false;

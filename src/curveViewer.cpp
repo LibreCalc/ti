@@ -46,12 +46,16 @@ void CurveViewer::reDisplay()
 {
   clear();
   
+  _minX=_config.getVariableValue(CONST_SPE_XMIN).toDouble();
+  _maxX=_config.getVariableValue(CONST_SPE_XMAX).toDouble();  
+  _minY=_config.getVariableValue(CONST_SPE_YMIN).toDouble();
+  _maxY=_config.getVariableValue(CONST_SPE_YMAX).toDouble();    
   //***************************************
   //Draw Axis
   //****************************************/
   if (_minX<0  and _maxX>0)
   {
-    int posYAxis=round(SCREEN_WIDTH*_minX/(_maxX-_minX));
+    int posYAxis=-round(SCREEN_WIDTH*_minX/(_maxX-_minX));
     ligne (_ecran,posYAxis,1, posYAxis,SCREEN_HEIGHT);
   }
   
@@ -65,7 +69,7 @@ void CurveViewer::reDisplay()
  //***************************************
  //Draw Curves
  //****************************************/ 
-    for (int l=0; l<4; l++)
+    for (int l=0; l<9; l++)
     {
       
       if (_config.getFunctionsToPlot(l).size()==0)

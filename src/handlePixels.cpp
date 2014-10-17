@@ -26,7 +26,8 @@ SDL_Surface *surface : la surface sur laquelle on va obtenir la couleur d'un pix
 int x : la coordonnée en x du pixel à obtenir
 int y : la coordonnée en y du pixel à obtenir
 */
-Uint32 obtenirPixel(SDL_Surface *surface, int x, int y)
+#define  obtenirPixel(surf,x,y) *((Uint8 *)surf->pixels + y * surf->pitch + x)/*
+inline Uint32 obtenirPixel(SDL_Surface *surface, int x, int y)
 {
 /*    /*nbOctetsParPixel représente le nombre d'octets utilisés pour stocker un pixel.
     En multipliant ce nombre d'octets par 8 (un octet = 8 bits), on obtient la profondeur de couleur
@@ -36,7 +37,7 @@ Uint32 obtenirPixel(SDL_Surface *surface, int x, int y)
     /*surface->pixels contient l'adresse du premier pixel de l'image*/
 //     Uint8 *p =*/ 
     
-    return *((Uint8 *)surface->pixels + y * surface->pitch + x);
+//    return *((Uint8 *)surface->pixels + y * surface->pitch + x);
 
 //     /*Gestion différente suivant le nombre d'octets par pixel de l'image*/
 //     switch(nbOctetsParPixel)
@@ -61,7 +62,7 @@ Uint32 obtenirPixel(SDL_Surface *surface, int x, int y)
 //         default:
 //             return 0; 
 //     }
-}
+//}
 /* ********************************************************************* */
 /*definirPixel : permet de modifier la couleur d'un pixel
 Paramètres d'entrée/sortie :
@@ -188,41 +189,58 @@ ligne (SDL_Surface *ecran,int x0, int y0, int x1, int y1)
 }
 
 
-void adaptSurface(SDL_Surface* toAdapt, SDL_Surface* output)
-{
+
+void adaptSurface(SDL_Surface* toAdapt, SDL_Surface* output, int x1, int x2, int y1, int y2)
+{ 
+  static bool prev[96][68]={0};
   Uint32 old_time;
   old_time=SDL_GetTicks();
   
+  if (x1==-1)
+  {
+    x1=0; x2=toAdapt->w;
+    y1=0;y2=toAdapt->h;
+  }
   double multFactorfw=1.0*(output->w)/(toAdapt->w);
   int multFactorw=int((output->w)/(toAdapt->w));
   
   double multFactorfh=1.0*(output->h)/(toAdapt->h);
   int multFactorh=int((output->h)/(toAdapt->h));
   
-//   if ( int((output->h)/(toAdapt->h)<multFactorh))
-//           multFactorh=int((output->h)/(toAdapt->h));
-  
-  SDL_FillRect( output, NULL, SDL_MapRGB(output->format, 255, 255, 255)); 
   SDL_Surface *blackRect=SDL_CreateRGBSurface(SDL_SWSURFACE,multFactorw+(multFactorw!=multFactorfw),multFactorh+(multFactorh!=multFactorfh),32,0,0,0,0);
   SDL_FillRect( blackRect, NULL, SDL_MapRGB(blackRect->format, 0, 0, 0));
-  
-  Uint8 r,g,b,a;
+  SDL_Surface *whiteRect=SDL_CreateRGBSurface(SDL_SWSURFACE,multFactorw+(multFactorw!=multFactorfw),multFactorh+(multFactorh!=multFactorfh),32,0,0,0,0);
+  SDL_FillRect( whiteRect, NULL, SDL_MapRGB(whiteRect->format, 255, 255, 255));  
+  Uint8 r,g,b,a,r2,g2,b2,a2;
   
   SDL_LockSurface(toAdapt);
  // SDL_LockSurface(output);
   
-  SDL_Rect rect;
-  for (int i=0;i<(toAdapt->w);i++)
-   for (int j=0;j<(toAdapt->h);j++)   
-   {
-     Uint32 pix= obtenirPixel(toAdapt, i, j);
-            SDL_GetRGBA(pix, toAdapt->format, &r, &g, &b, &a);
-      if( r+g+b<300)
-      {
-	rect.x=int(i*multFactorfw); rect.y=int(j*multFactorfh);
-	SDL_BlitSurface(blackRect,NULL,output,&rect);
-      }
-   }
+    SDL_Rect rect;
+    for (int i=x1; i<x2; i++)
+        for (int j=y1; j<y2; j++)
+        {
+            SDL_GetRGBA(obtenirPixel(toAdapt, i, j), toAdapt->format, &r, &g, &b, &a);
+
+            if (prev[i][j]==0 and r+g+b>300)        
+	    {
+	    rect.x=int(i*multFactorfw);
+            rect.y=int(j*multFactorfh);
+                    SDL_BlitSurface(whiteRect,NULL,output,&rect);
+	    }
+            prev[i][j]=((r+g+b)>=300?true:false);
+        }
+        
+    for (int i=x1; i<x2; i++)
+        for (int j=y1; j<y2; j++)
+        {
+            if(!prev[i][j])
+            {
+                rect.x=int(i*multFactorfw);
+                rect.y=int(j*multFactorfh);
+                SDL_BlitSurface(blackRect,NULL,output,&rect);
+            }
+        }
    
   SDL_UnlockSurface(toAdapt);
  // SDL_UnlockSurface(output);
@@ -230,9 +248,11 @@ void adaptSurface(SDL_Surface* toAdapt, SDL_Surface* output)
    int diff=SDL_GetTicks()-old_time;
    
    free(blackRect);
-   if (diff>100)
+   free(whiteRect);   
+   if (diff>0)
      cout<<"Warning resizing window is too slow: it took "<<diff<<" ms"<<endl;
 }
+
 
 // void
 // afficherPoint (SDL_Surface *ecran, int x, int y)

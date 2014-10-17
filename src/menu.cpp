@@ -67,6 +67,10 @@ void Menu::sendKey(SDL_keysym k1)
 		      break;   
 		      
 		    }
+		    if (_currentOffset>_currentSectedItem)
+		      _currentOffset=_currentSectedItem;
+		    if (_currentOffset<_currentSectedItem-6)
+		      _currentOffset=_currentSectedItem-6;		    
 		    reDisplay();
 }
 

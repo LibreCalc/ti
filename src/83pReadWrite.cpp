@@ -80,24 +80,86 @@ while(ifs.get(c_u)){
       ifs.get(c_u); c=c_u;
       if (c==10)
 	tmp.push_back(CONST_SPE_RANDINT);break; 
+      	  cout<<"error parsing"<<endl;
       break;  
      case 113:
 	tmp.push_back("-");break; 
      case -126:
 	tmp.push_back("*");break; 
      case -125:
-	tmp.push_back("/");break;        
+	tmp.push_back("/");break;   
+     case -81:
+	tmp.push_back("?");break;
+     case 22:
+	tmp.push_back("|");break;
+     case 6:
+	tmp.push_back("[");break;
+     case 7:
+	tmp.push_back("]");break;	
+     case 8:
+	tmp.push_back("{");break;
+     case 9:
+	tmp.push_back("}");break;	
      case -85:
-       //TODO
 	tmp.push_back(CONST_SPE_RAND);break; 
      case -46:
-       //TODO
 	tmp.push_back(CONST_SPE_REPEAT);break; 
-     case -79:
-       //TODO       
-	tmp.push_back(CONST_SPE_INT);break;       
-     case 11:
-       //TODO       
+     case -79:    
+	tmp.push_back(CONST_SPE_INT);break;    
+     case -75:
+	tmp.push_back(CONST_SPE_DIM);break;  
+     case -30:
+	tmp.push_back(CONST_SPE_FILL);break; 	
+     case -36:
+	tmp.push_back(CONST_SPE_INPUT);break;
+     case 92:	
+       ifs.get(c_u); c=c_u;
+	if (c==0)
+	{tmp.push_back(CONST_SPE_MATA);break; }
+	if (c==1)
+	{tmp.push_back(CONST_SPE_MATB);break; }
+	if (c==2)
+	{tmp.push_back(CONST_SPE_MATC);break; }
+	if (c==3)
+	{ tmp.push_back(CONST_SPE_MATD);break;}
+	if (c==4)
+	{tmp.push_back(CONST_SPE_MATE);break;} 	
+	if (c==5)
+	{tmp.push_back(CONST_SPE_MATF);break;} 
+	if (c==6)
+	{tmp.push_back(CONST_SPE_MATG);break;} 
+	if (c==7)
+	{tmp.push_back(CONST_SPE_MATH);break;}
+	if (c==8)
+	{tmp.push_back(CONST_SPE_MATI);break;}	
+	  cout<<"error parsing"<<endl;
+     case 93:
+        ifs.get(c_u); c=c_u;
+	if (c==0)
+	{tmp.push_back(CONST_SPE_L1);break; }
+	if (c==1)
+	{tmp.push_back(CONST_SPE_L2);break; }
+	if (c==2)
+	{tmp.push_back(CONST_SPE_L3);break; }
+	if (c==3)
+	{ tmp.push_back(CONST_SPE_L4);break;}
+	if (c==4)
+	{tmp.push_back(CONST_SPE_L5);break;} 	
+	if (c==5)
+	{tmp.push_back(CONST_SPE_L6);break;} 
+	if (c==6)
+	{tmp.push_back(CONST_SPE_L7);break;} 
+	if (c==7)
+	{tmp.push_back(CONST_SPE_L8);break;}
+	if (c==8)
+	{tmp.push_back(CONST_SPE_L9);break;}	
+	  cout<<"error parsing"<<endl;
+      break;
+     case -21:
+	tmp.push_back(CONST_CHAR_LUSER);break;	
+     case -6:
+	tmp.push_back(CONST_SPE_CLRLIST);break;	
+     case 11:     
 	tmp.push_back(CONST_CHAR_DEGREE);break;        
      case 16:
       tmp.push_back("(");break; 
@@ -116,7 +178,11 @@ while(ifs.get(c_u)){
      case -50:
       tmp.push_back(CONST_SPE_IF);break;   
      case -41:
-      tmp.push_back(CONST_SPE_GOTO);break;   
+      tmp.push_back(CONST_SPE_GOTO);break;  
+     case 18:
+      tmp.push_back(CONST_SPE_ROUND);break;  
+     case -39:
+      tmp.push_back(CONST_SPE_STOP);break;      
       case -49:
       tmp.push_back(CONST_SPE_THEN);break;   
       case -48:
@@ -190,6 +256,8 @@ while(ifs.get(c_u)){
       else
       {
 	cout<<"Parse completed successfully"<<endl;
+// 	      for (int i=0;i<res.size();i++)
+// 	  cout<<res[i].toStdString()<<endl;
 	res.push_back(tmp);
       }
 	

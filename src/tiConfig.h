@@ -28,15 +28,16 @@ class TiConfig
 {
 public:
   TiConfig();
-  TiVariant getVariableValue(char c);
-  void setVariableValue(char c,TiVariant value);
-  bool isVariable(char c);
+  TiVariant getVariableValue(int c);
+  void setVariableValue(int c,TiVariant value);
+  bool isVariable(int c);
+  TiVariant& getVariable(int c);
   TiVariant getAns();
   void setAns(TiVariant Ans);
   TiString& getFunctionsToPlot(int i);
  void setFunctionToPlot(int i,TiString s);
 private:
-  map<char,TiVariant> _variables;
+  map<int,TiVariant> _variables;
   TiVariant _Ans;
   vector<TiString> _functionsToPlot;
 };

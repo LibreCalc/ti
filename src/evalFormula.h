@@ -22,6 +22,15 @@
 #include "tiVariant.h"
 
 using namespace std;
+
+/**
+ * @brief Fonction importante: permet d'évaluer la valeur d'une expression qui se trouve dans une chaine de caractères.
+ * 
+ * @param s La chaine de caractères
+ * @param x La valeur de la variable x désirée
+ * @param config La configuration actuelle de la TI
+ * @return la valeur de l'expression
+ */
 TiVariant eval(TiString s, TiVariant x, TiConfig& config);
 
 namespace evalFormula{

@@ -33,12 +33,16 @@ public:
 private:
   void handleOutput(TiString s);
   void handleDisp(TiString s);  
-  void handleMenu(TiString s);    
+  void handleClearList(TiString s);    
+  void handleInput(TiString s);   
+  void handleMenu(TiString s);   
+  void handleFill(TiString s);     
   void checkForGetKey(TiString &s);
   void needToRefresh();
+  string removeQuote(string s);
  
   //Goto
-  int _needToGoto;
+  string _needToGoto;
   
   //Configuration Ti
   TiConfig &_conf; 

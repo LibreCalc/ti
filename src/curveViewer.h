@@ -23,19 +23,20 @@ using namespace std;
 #ifndef CURVE_VIEWER_H
 #define CURVE_VIEWER_H
 
+/**
+ * @brief Cette courbe gère l'affichage des courbes
+ */
 class CurveViewer
 {
 public:
   CurveViewer(  SDL_Surface *ecran,SDL_Surface *display,TiConfig &conf);
    void clear();
    void reDisplay();
-  void setEq(  TiString eq){_eq=eq;}
   
 private:
   SDL_Surface *_ecran;
   SDL_Surface *_display;  
   TiConfig & _config;
-  TiString _eq;
   double _minX;
   double _maxX;
   double _minY;

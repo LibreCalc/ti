@@ -14,13 +14,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HANDLE_PIXEL_H
-#define HANDLE_PIXEL_H
-// inline Uint32 obtenirPixel(SDL_Surface *surface, int x, int y); 
-#define  obtenirPixel(surf,x,y) *((Uint8 *)surf->pixels + y * surf->pitch + x)
+#ifndef COMMAND_HANDLER_H
+#define COMMAND_HANDLER_H
 
-inline void definirPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
+#include "tiString.h"
+#include "tiConfig.h"
+#include "tiVariant.h"
 
-void ligne (SDL_Surface *ecran,int x0, int y0, int x1, int y1);
-void adaptSurface(SDL_Surface *toAdapt,SDL_Surface *output,int x1=-1,int x2=-1, int y1=-1, int y2=-1);
+
+/**
+ * @brief Permet de gérer les commandes naturelle que l'on peut entrer dans l'écran principal par exemple
+ * @param s La commande
+ * @param conf L'état actuel de la configuration de la ti
+ * @return le résultat de la commande
+ */
+TiVariant SendCommand( TiString s, TiConfig& conf);
+
+/**
+ * @brief Permet de trouver un symbole d'affectation dans la chaine de caractères
+ * @param s la chaine de caractère
+ * @return La position du caractère d'affectation
+ */
+int findSto(TiString s);
 #endif

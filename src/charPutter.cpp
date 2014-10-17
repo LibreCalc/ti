@@ -30,7 +30,7 @@ CharPutter::CharPutter(SDL_Surface* ecran, SDL_Surface* display, int dim_X, int 
   _dim_X=dim_X;
   _dim_Y=dim_Y;
   _ecran=ecran;//SDL_SetVideoMode(95, 63, 32, SDL_HWSURFACE|SDL_DOUBLEBUF);
-    _heightCurentlyUsed=0;
+    _heightCurentlyUsed=1;
   
   for (int i=0;i<8;i++)
   {
@@ -95,11 +95,17 @@ CharPutter::CharPutter(SDL_Surface* ecran, SDL_Surface* display, int dim_X, int 
   _img_smallone=SDL_LoadBMP("img/small1.bmp");   
   _img_smalltwo=SDL_LoadBMP("img/small2.bmp");
   _img_smallthree=SDL_LoadBMP("img/small3.bmp"); 
-  _img_smallfour=SDL_LoadBMP("img/small4.bmp");    
+  _img_smallfour=SDL_LoadBMP("img/small4.bmp");
+  _img_smallfive=SDL_LoadBMP("img/small5.bmp");  
+  _img_smallsix=SDL_LoadBMP("img/small6.bmp");  
+  _img_smallseven=SDL_LoadBMP("img/small7.bmp"); 
+  _img_smallheight=SDL_LoadBMP("img/small8.bmp");  
+  _img_smallnine=SDL_LoadBMP("img/small9.bmp");   
   _img_equal=SDL_LoadBMP("img/=.bmp"); 
   _img_leftParenthesis=SDL_LoadBMP("img/(.bmp"); 
   _img_rightParenthesis=SDL_LoadBMP("img/).bmp"); 
   _img_star=SDL_LoadBMP("img/*.bmp");  
+  _img_exclamation=SDL_LoadBMP("img/!.bmp");    
   _img_slash=SDL_LoadBMP("img/slash.bmp");
   _img_minus=SDL_LoadBMP("img/-.bmp");
   _img_dot=SDL_LoadBMP("img/dot.bmp");
@@ -109,10 +115,16 @@ CharPutter::CharPutter(SDL_Surface* ecran, SDL_Surface* display, int dim_X, int 
   _img_sto=SDL_LoadBMP("img/sto.bmp");  
   _img_guillemet=SDL_LoadBMP("img/\".bmp"); 
   _img_accoladedroite=SDL_LoadBMP("img/}.bmp"); 
-  _img_accoladegauche=SDL_LoadBMP("img/{.bmp");   
+  _img_accoladegauche=SDL_LoadBMP("img/{.bmp");  
+  _img_v=SDL_LoadBMP("img/v.bmp");  
+  _img_x=SDL_LoadBMP("img/x.bmp");
+  _img_c=SDL_LoadBMP("img/c.bmp");  
   _img_virgule=SDL_LoadBMP("img/,.bmp");    
+   _img_small_minus=SDL_LoadBMP("img/smallMinus.bmp");   
   _voidchar=SDL_LoadBMP("img/void.bmp");  
- 
+  _img_crochetdroit=SDL_LoadBMP("img/].bmp");   
+  _img_crochetgauche=SDL_LoadBMP("img/[.bmp"); 
+  
   if(_voidchar==NULL)
     cout<<"Problème chargement"<<endl;  
 }
@@ -121,20 +133,21 @@ int CharPutter::disp(string s)
 {
   if (_heightCurentlyUsed==8)
   {
-   for (int i=6;i>=0;i--)
+   for (int i=1;i<8;i++)
   {
-    putString(mat[i+1],1,i+1);
+    putString(mat[i],1,i);
     }
-  for (int i=6;i>=0;i--)
-  {
-  mat[i]=mat[i+1];
-  }
+//   for (int i=6;i>=0;i--)
+//   {
+//   mat[i]=mat[i+1];
+//   }
   mat[7]="                ";
   _heightCurentlyUsed--;
  }
 
 putString("               ",1,_heightCurentlyUsed+1);
 putString(s,1,_heightCurentlyUsed);
+_heightCurentlyUsed++;
 }
 
 
@@ -144,8 +157,8 @@ void CharPutter::putChar(char c, int x, int y, bool invert)
       pos.x=(x-1)*6;
       pos.y=(y-1)*8;
   mat[y-1][x-1]=c;
-  if (y>_heightCurentlyUsed)
-    _heightCurentlyUsed=y;
+//   if (y>_heightCurentlyUsed)
+//     _heightCurentlyUsed=y;
 SDL_BlitSurface(_voidchar, NULL, _ecran, &pos);
   switch (c)
   {
@@ -181,7 +194,8 @@ SDL_BlitSurface(_voidchar, NULL, _ecran, &pos);
       break;      
     case 'Y': 
       SDL_BlitSurface(_img_Y, NULL, _ecran, &pos);
-      break;     
+      break;   
+      	loadCharpix('v',_img_v)
 	loadCharpix('X',_img_X)	       
 	loadCharpix('A',_img_A)	  
 	loadCharpix('B',_img_B)  
@@ -223,15 +237,24 @@ SDL_BlitSurface(_voidchar, NULL, _ecran, &pos);
 	loadCharpix('b',_img_b)
 	loadCharpix('d',_img_d)
 	loadCharpix('f',_img_f)	
+	loadCharpix('x',_img_x)
+	loadCharpix('c',_img_c)	
 	loadCharpix('\"',_img_guillemet)
+	loadCharpix(CONST_CHAR_SMALL_MINUS,_img_small_minus)
+	loadCharpix('[',_img_crochetgauche)
+	loadCharpix(']',_img_crochetdroit)	
 	loadCharpix('{',_img_accoladegauche)
 	loadCharpix('}',_img_accoladedroite)
+	loadCharpix('!',_img_exclamation)	
 	loadCharpix(',',_img_virgule)	
 	loadCharpix('>',_img_superior)	
 	loadCharpix(CONST_CHAR_DEGREE,_img_degree)	
-	loadCharpix(CONST_CHAR_PI,_img_pi)		
-	//TODO remove this
-	loadCharpix('[',_img_X)		
+	loadCharpix(CONST_CHAR_PI,_img_pi)	
+	loadCharpix(CONST_CHAR_SMALL5,_img_smallfive)	
+	loadCharpix(CONST_CHAR_SMALL6,_img_smallsix)
+	loadCharpix(CONST_CHAR_SMALL7,_img_smallseven)	
+	loadCharpix(CONST_CHAR_SMALL8,_img_smallheight)
+// 	loadCharpix(CONST_CHAR_SMALL9,_img_smallnine)				
     case CONST_CHAR_STO: 
       SDL_BlitSurface(_img_sto, NULL, _ecran, &pos);      
       break;       
@@ -281,6 +304,7 @@ SDL_BlitSurface(_voidchar, NULL, _ecran, &pos);
   
  if (invert)
    blink(x,y);
+     _areasToRedisplay.push_back(pair<int,int>(x,y));
 }
 
 int CharPutter::putString(string s, int x, int y,bool invert)
@@ -317,24 +341,37 @@ Uint8 r,g,b,a;
       pix=SDL_MapRGBA(_ecran->format, 255-r, 255-g, 255-b, 255);
       definirPixel(_ecran,i,j,pix);
     }
+    _areasToRedisplay.push_back(pair<int,int>(x,y));
 }
 
 
 void CharPutter::clear()
 {
-   _heightCurentlyUsed=0;
+   _heightCurentlyUsed=1;
      
   for (int i=0;i<8;i++)
   {
   mat[i]="                ";  
   }
         SDL_FillRect( _ecran, NULL, SDL_MapRGB(_ecran->format, 255, 255, 255)); 
+	_needFullRedisplay=true;
 }
 
 void CharPutter::refreshScreen()
 {
+   if (_needFullRedisplay)
   adaptSurface(_ecran,_display);
+  else
+  {
+   for (int i=0;i<_areasToRedisplay.size();i++)
+   {
+    adaptSurface(_ecran,_display,6*(_areasToRedisplay[i].first-1),6*(_areasToRedisplay[i].first-1)+5,8*(_areasToRedisplay[i].second-1),8*(_areasToRedisplay[i].second-1)+7); 
+   }
+  }
    SDL_Flip(_display);
+   _needFullRedisplay=false;
+   _areasToRedisplay.clear();
+  
 }
 
 string CharPutter::getBuffer()

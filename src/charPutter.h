@@ -16,12 +16,16 @@
 #include <SDL/SDL.h>
 #include <string>
 #include <vector>
+#include <set>
 
 using namespace std;
 
 #ifndef CHAR_PUTTER_H
 #define CHAR_PUTTER_H
 
+/**
+ * @brief Cette classe permet de gérer l'affichage de caractères à l'écran. 
+ */
 class CharPutter
 {
 public:
@@ -83,17 +87,22 @@ private:
   SDL_Surface *_img_m; 
   SDL_Surface *_img_g; 
   SDL_Surface *_img_a;
-  
+  SDL_Surface *_img_v;  
   SDL_Surface *_img_k; 
   SDL_Surface *_img_t;   
   SDL_Surface *_img_o;
   SDL_Surface *_img_u;  
   SDL_Surface *_img_i;
   SDL_Surface *_img_n;  
-  SDL_Surface *_img_l;  
+  SDL_Surface *_img_l;
+    
   SDL_Surface *_img_r; 
+  SDL_Surface *_img_x;  
+  SDL_Surface *_img_c;   
   SDL_Surface *_img_pi;  
-  SDL_Surface *_img_P;  
+  SDL_Surface *_img_P;   
+  SDL_Surface *_img_crochetgauche;   
+  SDL_Surface *_img_crochetdroit; 
   SDL_Surface *_img_superior;   
   SDL_Surface *_img_degree;    
   SDL_Surface *_img_plus;
@@ -104,10 +113,16 @@ private:
   SDL_Surface *_img_smallone;  
   SDL_Surface *_img_smalltwo;  
   SDL_Surface *_img_smallthree;   
-  SDL_Surface *_img_smallfour;    
+  SDL_Surface *_img_smallfour;   
+  SDL_Surface *_img_smallfive; 
+  SDL_Surface *_img_smallsix;   
+  SDL_Surface *_img_smallseven;   
+  SDL_Surface *_img_smallheight;   
+  SDL_Surface *_img_smallnine;   
   SDL_Surface *_img_star;
   SDL_Surface *_img_slash;   
   SDL_Surface *_img_minus;  
+  SDL_Surface *_img_small_minus;   
   SDL_Surface *_img_dot;   
   SDL_Surface *_img_pow;
   SDL_Surface *_img_sto;  
@@ -117,7 +132,10 @@ private:
   SDL_Surface *_img_accoladedroite;  
   SDL_Surface *_img_virgule;   
   SDL_Surface *_clearZone;
- 
+  SDL_Surface *_img_exclamation; 
+  
+  vector<pair<int,int> > _areasToRedisplay;
+  bool _needFullRedisplay;
 };
 
 #endif

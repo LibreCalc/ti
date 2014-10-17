@@ -21,6 +21,7 @@
 #include <cmath>
 #include <unistd.h>
 #include "menu.h"
+#include "commandsHandler.h"
 
 using namespace std;
 
@@ -33,39 +34,44 @@ _key=0;
 
 void TiParser::execProgram(vector< TiString >& program)
 {
-_needToGoto=1;
-int labelPos=0;
-map<char, int> labels;
-for (int i=0;i<program.size();i++)
- {
- if (program[i].size()==2 and program[i][0]==CONST_SPE_LABEL)
-   labels.insert(pair<char,int>(program[i][1],i));
- }
+    _needToGoto=1;
+    int labelPos=0;
+    map<string, int> labels;
+    for (int i=0; i<program.size(); i++)
+    {
+        if (program[i].size()>=2 and program[i][0]==CONST_SPE_LABEL)
+	{
+                labels.insert(pair<string,int>(program[i].subString(1,program[i].size()).toStdString(),i));
+	    }
+    }
 
-while (_needToGoto>=0)
-  {	
-  exec(program,labelPos,program.size());
-  if (_needToGoto>=0)
-  {
+    while (_needToGoto.size()>0)
+    {
+        exec(program,labelPos,program.size());
+        if (_needToGoto.size()>0)
+        {
 //      cout<<"goto "<<(char)_needToGoto<<endl;
-   labelPos=labels.at(_needToGoto);
-  }
-  }
+            labelPos=labels.at(_needToGoto);
+        }
+    }
 }
 
 
 void TiParser::exec(vector< TiString >& program, int start, int end)
 { 
-  _needToGoto=-1;
+  _needToGoto.clear();
   start--;
   
-  while (start+1<end and _needToGoto<0)
+  while (start+1<end and _needToGoto.size()==0)
   {
     usleep(500);
   start++;
   if(program[start].size()==0)
     continue;
-   //   cout<<_conf.getAns()<<" "<<_conf.getVariableValue('Z')<<" "<<program[start].toStdString()<<endl;
+  SDL_Delay(1);
+     // cout<<_conf.getAns().toString()<<" "<<_conf.getVariableValue(CONST_SPE_L2).toString()<<" "<<program[start].toStdString()<<endl;
+  
+  //Might be useful to do a switch?
   if (program[start][0]==CONST_SPE_OUTPUT)
   {
     handleOutput(program[start]); continue;
@@ -75,28 +81,55 @@ void TiParser::exec(vector< TiString >& program, int start, int end)
   {
     handleDisp(program[start]); continue;
   }
+  
+  if (program[start][0]==CONST_SPE_INPUT)
+  {
+    handleInput(program[start]); continue;
+  }
+  
+  if (program[start][0]==CONST_SPE_STOP)
+  {
+    _needToGoto.clear(); return;
+  }
+  
+  if (program[start][0]==CONST_SPE_FILL)
+  {
+    handleFill(program[start]); continue;
+  }  
     
+  if (program[start][0]==CONST_SPE_CLRLIST)
+  {
+    handleClearList(program[start]); continue;
+  }  
   if (program[start][0]==CONST_SPE_LABEL)
     continue;
   
   if (program[start][0]==CONST_SPE_PAUSE)
   {
-    TiString s;
+   
+    TiString s; 
+    if (s.size()>1)
+    {
+    handleDisp(program[start]);
     _charPutter->refreshScreen();
+    }
+    else
+      _charPutter->refreshScreen();
+
     while (s.toStdString()!="105")
       {s.clear();s.push_back(CONST_SPE_GETKEY);checkForGetKey(s);SDL_Delay(50);}
     continue;  
   }
   
   if (program[start][0]==CONST_SPE_GOTO)
-  { _needToGoto =program[start][1];continue;} 
+  { _needToGoto=program[start].subString(1,program[start].size()).toStdString(); continue;} 
     
   if (program[start][0]==CONST_SPE_MENU)
   { handleMenu(program[start]); continue;} 
   
   if (program[start][0]==CONST_SPE_CLEARHOME)
   {
-  /* cout<<"Clearhome"<<endl;*/;_charPutter->refreshScreen();SDL_Delay(39); _charPutter->clear(); needToRefresh();continue;
+  /* cout<<"Clearhome"<<endl;*/;_charPutter->refreshScreen();/*SDL_Delay(39);*/ _charPutter->clear(); needToRefresh();continue;
   }  
     
   /****************************************************************
@@ -109,7 +142,7 @@ if ( program[start].size()>1 and program[start][0]==CONST_SPE_WHILE)
     int stopWhile=lookForEnd(program,start+1,end);
     while(eval(condition,_conf.getVariableValue('X'),_conf).toDouble()){
       exec(program,start+1,stopWhile);
-      if (_needToGoto>=0)
+      if (_needToGoto.size()>0)
 	  break; 
     }
     start=stopWhile;
@@ -127,7 +160,7 @@ if ( program[start].size()>1 and program[start][0]==CONST_SPE_REPEAT)
     while(!(eval(condition,_conf.getVariableValue('X'),_conf).toDouble())){
       _conf.setAns(eval(condition,_conf.getVariableValue('X'),_conf)); 
       exec(program,start+1,stopRepeat);
-      if (_needToGoto>=0)
+      if (_needToGoto.size()>0)
 	  break; 
     }
     start=stopRepeat;
@@ -157,14 +190,14 @@ if ( program[start].size()>3 and program[start][0]==CONST_SPE_FOR)
       int step=1;
       if (strs.size()==4)
       step=eval(strs[3],_conf.getVariableValue('X'),_conf).toDouble();   
-      for (int i=min;i<=max;i+=step)
+      for (int i=min;(i<=max and step>0) or (i>=max and step<0);i+=step)
       {
 	_conf.setVariableValue(strs[0][0],i);
 	if (start+1==stopFor)
 	  SDL_Delay(1);
 	else
 	  exec(program,start+1,stopFor);
-	if (_needToGoto>=0)
+	if (_needToGoto.size()>0)
 	  break;
       }
     }
@@ -179,6 +212,7 @@ if ( program[start].size()>1 and program[start][0]==CONST_SPE_IF)
   {
     TiString condition=program[start];
     condition.erase(0);
+    checkForGetKey(condition);
     if (program.size()>start+1 and program[start+1].size()==1 and program[start+1][0]==CONST_SPE_THEN)
     {
       int elsePos=lookForElse(program,start+2,end);
@@ -208,22 +242,8 @@ if ( program[start].size()>1 and program[start][0]==CONST_SPE_IF)
    **************************************************************/
   TiString _currString=program[start];
   checkForGetKey(_currString);
-if (_currString.size()>2  and _conf.isVariable(_currString[_currString.size()-1])
-  and _currString[_currString.size()-2]==CONST_CHAR_STO)
-  {
-    int res;
-    char var=_currString[_currString.size()-1];
-    _currString.erase(_currString.size()-1);
-    _currString.erase(_currString.size()-1);    
-    res=eval(_currString,_conf.getVariableValue('X'),_conf).toDouble();
-    _conf.setVariableValue(var,res);
-    _conf.setAns(res); 
-  }
-  else
-  {
-   _conf.setAns(eval(_currString,_conf.getVariableValue('X'),_conf));
-  }
-  
+  TiVariant res=SendCommand(_currString,_conf);
+
   }
   
 }
@@ -281,11 +301,9 @@ else
 int y=round(eval(strs[0],_conf.getVariableValue('X'),_conf).toDouble());
 int x=round(eval(strs[1],_conf.getVariableValue('X'),_conf).toDouble());
 // cout<<"Outuput "<<x<<" "<<y<<" "<<strs[0].toStdString()<<endl;
-strs[2].erase(0);
-if (strs[2][strs[2].size()-1]=='\"')
-  strs[2].erase(strs[2].size()-1);
-_charPutter->putString(strs[2].toStdString(),x,y);
-SDL_Delay(strs[2].toStdString().size()*1.5);
+ string str=removeQuote(eval(strs[2],0,_conf).toString());
+_charPutter->putString(str,x,y);
+//SDL_Delay(str.size()*1.5);
  _charPutter->refreshScreen();
 
 needToRefresh();
@@ -358,7 +376,7 @@ s.erase(0);
 vector<TiString> strs=evalFormula::ParseComas(s);
 if (strs.size()==0)
 {
- cout<<"Erreur Disp"<<endl; 
+ cout<<"Erreur Disp "<<s.toStdString()<<endl; 
 }
 for (int i=0;i<strs.size();i++)
   {
@@ -368,8 +386,7 @@ for (int i=0;i<strs.size();i++)
     }
     else
     {
-      strs[i].erase(0);
-      _charPutter->disp(strs[i].toStdString());
+      _charPutter->disp(removeQuote(eval(strs[i],0,_conf).toString()));
     }
       
   }
@@ -393,12 +410,12 @@ void TiParser::handleMenu(TiString s)
     cout<<"Erreur  Menu"<<endl;
     return;
   }
-  TiString title=strs[0];
+  TiString title(removeQuote(strs[0].toStdString()));
   vector<TiString> choices;
   vector<TiString> gotos;  
   for (int i=0;i<(strs.size()-1)/2;i++)
   {
-    choices.push_back(strs[i*2+1]);
+    choices.push_back(removeQuote(strs[i*2+1].toStdString()));
     gotos.push_back(strs[i*2+2]);
   }
     
@@ -406,6 +423,7 @@ void TiParser::handleMenu(TiString s)
   m.reDisplay();
   SDL_Event event;
   int stop=0;
+    SDL_EnableKeyRepeat(0,50);
   while (!stop)
   {
     SDL_WaitEvent(&event);
@@ -421,7 +439,102 @@ void TiParser::handleMenu(TiString s)
 		m.sendKey(event.key.keysym);    
     }
   }
+    SDL_EnableKeyRepeat(1,50);
   int choice=m.getSelectedItem();
-  _needToGoto=gotos[choice][0];
+  string tmps; tmps.push_back(gotos[choice][0]);
+  _needToGoto=tmps;
+  _charPutter->clear();
+}
+
+string TiParser::removeQuote(string s)
+{
+  if (s[0]=='\"')
+    s.erase(0,1);
+  if (s[s.size()-1]=='\"')
+    s.erase(s.size()-1,1);  
+  return s;
+}
+
+void TiParser::handleClearList(TiString s)
+{
+s.erase(0);
+vector<TiString> strs= evalFormula::ParseComas(s);
+for (int i=0;i<strs.size();i++)
+{
+ if (strs[i].size()!=1)
+   cout<<"Erreur ClearList"<<endl;
+ else
+   _conf.setVariableValue(strs[i][0],TiVariant(vector<TiVariant>()));
+}
+}
+
+
+void TiParser::handleInput(TiString s)
+{
+  cout<<"Input"<<endl;
+  s.erase(0);
+  vector<TiString> strs=evalFormula::ParseComas(s);
+  if (strs.size()>2)
+    return;
+  if (strs.size()==2)
+  _charPutter->disp(removeQuote(eval(strs[0],0,_conf).toString()));
+      _charPutter->refreshScreen();
+  SDL_Event event;
+  TiString buff;
+  SDL_EnableKeyRepeat(0,20);
+  SDL_Delay(500);
+  while (SDL_PollEvent(&event));
+  while (1)
+{
+  SDL_Delay(15);
+    if(SDL_PollEvent(&event))
+    {
+    
+    
+    switch(event.type)
+    {
+	case SDL_QUIT:
+	  SDL_Quit();
+	return ; break;
+	
+	case SDL_KEYDOWN:
+	  
+	      if (event.key.keysym.sym==SDLK_RETURN and buff.size()>0)
+	      {
+		if (strs.size()==2)
+		  _conf.setVariableValue(strs[1][0],eval(buff,0,_conf));
+		else
+		  _conf.setVariableValue(strs[0][0],eval(buff,0,_conf));
+		SDL_EnableKeyRepeat(1,75);
+		return;
+	      }
+	      
+	      if (keyParser::isChar(event.key.keysym))
+	      {
+		buff.push_back(keyParser::getChar(event.key.keysym));
+		_charPutter->disp(buff.toStdString());
+		    _charPutter->refreshScreen();
+	      }
+		
+    }
+    }
+}
+
+}
+
+void TiParser::handleFill(TiString s)
+{
+    if (s.size()<3)
+        return;
+    s.erase(0);
+    if (s[s.size()-1]==')')
+        s.erase(s.size()-1);
+    vector<TiString> strs=evalFormula::ParseComas(s);
+    if (strs.size()!=2 or strs[1].size()!=1)
+    {
+        cout<<"Erreur Fill"<<endl;
+        return;
+    }
+    _conf.getVariable(strs[1][0]).fill(eval(strs[0],_conf.getVariableValue('X'),_conf));
 }
 

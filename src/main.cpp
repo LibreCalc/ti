@@ -29,6 +29,7 @@
 #include <dirent.h>
 #include <string.h>
 #include "menu.h"
+#include "curveRangeEditor.h"
 
 main(int argc, char **argv){
    
@@ -38,7 +39,7 @@ main(int argc, char **argv){
     cout<<"Cannot initialise SDL"<<endl;
     exit (1) ;
   }
-  SDL_Surface *display=SDL_SetVideoMode(400, 240, 32, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF/*|SDL_FULLSCREEN*/);
+  SDL_Surface *display=SDL_SetVideoMode(400, 240, 16, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF/*|SDL_FULLSCREEN*/);
   if (display==NULL)
   {
     cout<<"Can't open a SDL display for unknown reason, exiting"<<endl;
@@ -81,6 +82,7 @@ main(int argc, char **argv){
   YEqualsMenu yeq(&charput,&conf);
   MainScreen ms(&charput,conf);
   Menu menuPrgrm(&charput,TiString("Prgrm"),programsMenu);
+  CurveRangeEditor rangeEdit(&charput,&conf);
 
   charput.clear();
   vector<TiString> program;
@@ -132,7 +134,6 @@ main(int argc, char **argv){
 		mode=3;
 		conf.setFunctionToPlot(1,yeq.getFirstEq());
 		
-		curve.setEq(yeq.getFirstEq());
 		curve.reDisplay();
 	      } 
 	     else if(event.key.keysym.sym==SDLK_F4)
@@ -140,9 +141,16 @@ main(int argc, char **argv){
 		mode=4;
 		menuPrgrm.reDisplay();
 	      } 
+	      
+	     else if(event.key.keysym.sym==SDLK_F5)
+	      {
+		mode=5;
+		rangeEdit.loadVariables();
+		rangeEdit.reDisplay();
+	      } 
 	     else if(event.key.keysym.sym==SDLK_RETURN and mode==4)
 	      {
-		 SDL_EnableKeyRepeat(1,20);
+		 SDL_EnableKeyRepeat(1,75);
 		program=read83pFile("working/"+programsFiles[menuPrgrm.getSelectedItem()]);
 // 		for (int i=0;i<program.size();i++)  
 // 		  cout<<":"<<program[i].toStdString()<<endl;
@@ -172,7 +180,10 @@ main(int argc, char **argv){
 		 break;
 		 case 4:
 		    menuPrgrm.sendKey( event.key.keysym);
-		 break;		 
+		 break;	
+		 case 5:
+		    rangeEdit.sendKey( event.key.keysym);
+		 break;			 
 		}
 	      }
             break;
@@ -189,6 +200,12 @@ if (SDL_GetTicks()-old_time>350)
     {
     ms.blinkCursor();
     ms.reDisplay();
+    }
+    
+    if (mode==5)
+    {
+     rangeEdit.blinkCursor();
+     rangeEdit.reDisplay();
     }
     old_time=SDL_GetTicks();
   }

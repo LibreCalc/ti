@@ -19,6 +19,7 @@
 
 #include <math.h>
 #include "keyParser.h"
+#include "commandsHandler.h"
 
 using namespace std;
 MainScreen::MainScreen(CharPutter* putt, TiConfig &conf):_conf(conf)
@@ -48,19 +49,9 @@ void MainScreen::calc()
 _buff=_buff+_currString.toStdString();
 //TODO
 TiVariant res;
-if (_currString.size()>2  and _conf.isVariable(_currString[_currString.size()-1])
-  and _currString[_currString.size()-2]==CONST_CHAR_STO)
-  {
-    char var=_currString[_currString.size()-1];
-    //TODO
-   // _currString=string(_currString.begin(),_currString.begin()+_currString.size()-2);
-    _currString.erase(_currString.size()-1);
-    _currString.erase(_currString.size()-1);    
-    res=eval(_currString,_conf.getVariableValue('X'),_conf);
-    _conf.setVariableValue(var,res);
-  }
-  else
-   res=eval(_currString,_conf.getVariableValue('X'),_conf);
+
+res=SendCommand(_currString,_conf);
+
 int x=16-_buff.size()%16;
  
 //TODO use toString

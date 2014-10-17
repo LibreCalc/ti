@@ -47,6 +47,10 @@ int keyParser::getChar(SDL_keysym k)
 	  int res=char(k.unicode & 0x7F);
 	  if (res=='s')
 	    res=(int)CONST_SPE_SIN;
+	  if (res=='l')
+	    res=(int)CONST_SPE_L1;	
+	  if (res=='m')
+	    res=(int)CONST_SPE_L2;	  
 	  if (res=='i')
 	  {
 	    res=(int)'i';
@@ -64,50 +68,6 @@ int keyParser::getChar(SDL_keysym k)
 	
 	return res;		      
       }  
-      //WARNING old method
-/*  switch(k.sym){
-		  case SDLK_x:
-		      return 'X'; 
-		  case SDLK_KP_PLUS:
-		      return '+'; 
-		  case SDLK_LEFTPAREN:
-		      if (k.mod==KMOD_LMETA)
-			return '5';
-		      else
-			return '('; 
-		  case SDLK_KP_MULTIPLY:
-		      return '*'; 
-		  case SDLK_KP_MINUS:
-		      return '-'; 
-		  case SDLK_KP_DIVIDE:
-		      return '/'; 		      
-		  case SDLK_RIGHTPAREN:
-		      return ')';   
-		  case SDLK_KP1:
-		      return '1'; 
-		  case SDLK_KP2:
-		      return '2';   	
-		  case SDLK_KP3:
-		      return '3';  	
-		  case SDLK_KP4:
-		      return '4'; 	 
-		  case SDLK_KP5:
-		      return '5'; 
-		  case SDLK_KP6:
-		      return '6'; 	 
-		  case SDLK_KP7:
-		      return '7';  		      
-		  case SDLK_KP8:
-		      return '8'; 			      
-		  case SDLK_KP9:
-		      return'9';
-		  case SDLK_KP0:
-		      return'0';
-		      case SDLK_0:
-			return'0';
-		    case SDLK_KP_PERIOD:
-		      return'.';*/		      
-/*}*/  
 
 		  
 }

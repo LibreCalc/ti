@@ -14,13 +14,35 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HANDLE_PIXEL_H
-#define HANDLE_PIXEL_H
-// inline Uint32 obtenirPixel(SDL_Surface *surface, int x, int y); 
-#define  obtenirPixel(surf,x,y) *((Uint8 *)surf->pixels + y * surf->pitch + x)
+#ifndef CURVE_RANGE_EDITOR
+#define CURVE_RANGE_EDITOR
 
-inline void definirPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
+#include "charPutter.h"
+#include "tiConfig.h"
 
-void ligne (SDL_Surface *ecran,int x0, int y0, int x1, int y1);
-void adaptSurface(SDL_Surface *toAdapt,SDL_Surface *output,int x1=-1,int x2=-1, int y1=-1, int y2=-1);
+/**
+ * @brief Cette classe gére le menu qui permet de définir le RANGE pour le courbes
+ * 		(Xmin Xmax, Ymin, Ymax ect..)
+ */
+
+class CurveRangeEditor{
+public:
+  CurveRangeEditor(CharPutter *putt,TiConfig *conf);
+  void reDisplay();
+  void loadVariables();
+  void writeVariables();
+  void blinkCursor();
+  void sendKey(SDL_keysym k);
+private:
+  void sendChar(int c);
+  void rmChar();
+  CharPutter *_putt;
+  TiConfig * _conf;
+  int _currentLine;
+  int _currentCursPosInStr;
+  bool _isCursorBlinked;
+  
+  vector<string> _editedLines; 
+};
+
 #endif

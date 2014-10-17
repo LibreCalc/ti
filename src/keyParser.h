@@ -28,16 +28,13 @@
 #define CONST_CHAR_SMALL_MINUS (char)(-104)
 #define CONST_CHAR_PI (char)(-105)
 #define CONST_CHAR_THETA (char)(-106)
-#define CONST_CHAR_L1 (char)(-107)
-#define CONST_CHAR_L2 (char)(-108)
-#define CONST_CHAR_L3 (char)(-109)
-#define CONST_CHAR_L4 (char)(-110)
-#define CONST_CHAR_L5 (char)(-111)
-#define CONST_CHAR_L6 (char)(-112)
-#define CONST_CHAR_L7 (char)(-113)
-#define CONST_CHAR_L8 (char)(-114)
-#define CONST_CHAR_L9 (char)(-115)
+#define CONST_CHAR_LUSER (char)(-130)
 #define CONST_CHAR_SMALL4 (char)(-116)
+#define CONST_CHAR_SMALL5 (char)(-117)
+#define CONST_CHAR_SMALL6 (char)(-118)
+#define CONST_CHAR_SMALL7 (char)(-119)
+#define CONST_CHAR_SMALL8 (char)(-120)
+#define CONST_CHAR_SMALL9 (char)(-121)
 
 namespace keyParser {
 bool isChar(SDL_keysym k);
