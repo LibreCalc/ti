@@ -1,0 +1,17 @@
+Add support for multi-curve
+add support for cos ln exp sqrt
+add curve range  configuration
+add "syntax error" support
+add support for lists
+add support for matrixes
+Add support for non-closed parenthèsis ( ))
+Resolve bug of coma ,,,
+
+------Ti Basic--------
+*Add support for non-closed parenthèsis ( ))
+*DelVar
+*Finir Menus
+*Pause
+*Disp
+*Special Chars
+*<
