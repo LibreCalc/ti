@@ -24,12 +24,41 @@ _currentOffset=0;
 _currentSectedItem=0;
 _title=title;
 _choices=choices;
+_isMultipleMenu=false;
+}
+
+
+Menu::Menu(CharPutter* cputt, vector< TiString > title, vector< vector< TiString > > choices)
+{
+_cputt=cputt;
+_currentOffset=0;
+_currentSectedItem=0;
+_isMultipleMenu=true;
+_multipleChoices=choices;
+_multipleTitles=title;
+if (title.size()==0 or choices.size()==0)
+  return;
+_title=title[0];
+_choices=choices[0];
+_selectedTitle=0;
 }
 
 void Menu::reDisplay()
 {
 _cputt->clear();
+if (!_isMultipleMenu)
+{
 _cputt->putString(_title.toStdString(),1,1,true);
+}
+else
+{
+  int x=1;
+  for (int i=0;i<_multipleTitles.size();i++)
+  {
+  _cputt->putString(_multipleTitles[i].toStdString(),x,1,_selectedTitle==i);
+  x=x+_multipleTitles[i].size()+1;
+  }
+}
 for (int i=_currentOffset;i<_currentOffset+7;i++)
     {
       if (_choices.size()>i)
@@ -64,8 +93,13 @@ void Menu::sendKey(SDL_keysym k1)
 		   case SDLK_DOWN:
 		      if (_choices.size()-1>_currentSectedItem)
 			_currentSectedItem++;
-		      break;   
-		      
+		      break; 
+		   case SDLK_LEFT:
+		     changeTitle(true);
+		     break;
+		   case SDLK_RIGHT:
+		     changeTitle(false);
+		     break;		      
 		    }
 		    if (_currentOffset>_currentSectedItem)
 		      _currentOffset=_currentSectedItem;
@@ -74,7 +108,45 @@ void Menu::sendKey(SDL_keysym k1)
 		    reDisplay();
 }
 
+void Menu::changeTitle(bool left)
+{
+    if (!_isMultipleMenu)
+        return;
+    if (left)
+    {
+        if (_selectedTitle>0)
+        {
+            _selectedTitle--;
+            _currentSectedItem=0;
+        }
+    }
+    else
+    {
+        if (_selectedTitle<_multipleTitles.size()-1)
+        {
+            _selectedTitle++;
+            _currentSectedItem=0;
+        }
+    }
+    _choices=_multipleChoices[_selectedTitle];
+    reDisplay();
+}
+
 int Menu::getSelectedItem()
 {
 return _currentSectedItem;
 }
+
+TiString Menu::getSelectedString()
+{
+return _choices[_currentSectedItem];
+}
+
+int Menu::getSelectedTitle()
+{
+if (_isMultipleMenu)
+  return _selectedTitle;
+else
+  return 0;
+}
+

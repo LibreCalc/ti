@@ -275,3 +275,17 @@ while(ifs.get(c_u)){
 cout<<"Read size "<<res.size()<<" last "<<int(c)<<endl;
 return res;
 }
+
+
+void write83pFile(string loc, vector< TiString > program)
+{
+
+  for (int i=0;i<program.size();i++)
+  {
+   for (int j=0;j<program[i].size();j++)
+   {
+     
+   }
+    
+  }
+}

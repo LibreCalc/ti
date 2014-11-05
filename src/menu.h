@@ -21,14 +21,44 @@
 #include <vector>
 class Menu{
 public: 
+  /**
+   * @brief Création d'un menu simple
+   * 
+   * @param cputt le charPutter
+   * @param title l'unique titres
+   * @param choices l'unique liste de choix
+   */
   Menu(CharPutter *cputt,TiString title,vector<TiString> choices);
-  void reDisplay();
-  void sendKey(SDL_keysym  k);  
+  
+  /**
+   * @brief Création d'un menu à multiple titres en haut
+   * 
+   * @param cputt le charPutter
+   * @param title la liste des titres
+   * @param choices la liste des liste de choix
+   */
+  Menu(CharPutter *cputt,vector<TiString> title,vector< vector<TiString> > choices);
+  
+  int getSelectedTitle();
   int getSelectedItem();
+  TiString getSelectedString();
+  void reDisplay();
+  void sendKey(SDL_keysym  k);
 private:
+  void changeTitle(bool left);
+  
+  
+  
   CharPutter *_cputt;
   TiString _title;
   vector<TiString> _choices; 
+  
+  bool _isMultipleMenu;
+  vector<TiString> _multipleTitles;
+  vector<vector<TiString> > _multipleChoices;
+  int _selectedTitle;
+  
+  
   int _currentSectedItem;
   int _currentOffset;
 };

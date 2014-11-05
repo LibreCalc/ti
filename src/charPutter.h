@@ -95,10 +95,14 @@ private:
   SDL_Surface *_img_i;
   SDL_Surface *_img_n;  
   SDL_Surface *_img_l;
-    
+  SDL_Surface *_img_h;
+  SDL_Surface *_img_p;  
+  SDL_Surface *_img_y;  
   SDL_Surface *_img_r; 
   SDL_Surface *_img_x;  
-  SDL_Surface *_img_c;   
+  SDL_Surface *_img_c; 
+  SDL_Surface *_img_w;   
+  SDL_Surface *_img_theta;  
   SDL_Surface *_img_pi;  
   SDL_Surface *_img_P;   
   SDL_Surface *_img_crochetgauche;   

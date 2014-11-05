@@ -72,9 +72,11 @@ CharPutter::CharPutter(SDL_Surface* ecran, SDL_Surface* display, int dim_X, int 
   _img_X=SDL_LoadBMP("img/X.bmp");    
   _img_Y=SDL_LoadBMP("img/Y.bmp"); 
   _img_Z=SDL_LoadBMP("img/Z.bmp");
-  _img_s=SDL_LoadBMP("img/b.bmp");
-  _img_s=SDL_LoadBMP("img/d.bmp");
-  _img_s=SDL_LoadBMP("img/f.bmp");  
+  _img_b=SDL_LoadBMP("img/b.bmp");
+  _img_h=SDL_LoadBMP("img/h.bmp");
+  _img_y=SDL_LoadBMP("img/y.bmp");  
+  _img_d=SDL_LoadBMP("img/d.bmp");
+  _img_f=SDL_LoadBMP("img/f.bmp");  
   _img_s=SDL_LoadBMP("img/s.bmp");  
   _img_k=SDL_LoadBMP("img/k.bmp");
   _img_t=SDL_LoadBMP("img/t.bmp");   
@@ -88,6 +90,8 @@ CharPutter::CharPutter(SDL_Surface* ecran, SDL_Surface* display, int dim_X, int 
   _img_r=SDL_LoadBMP("img/r.bmp");
   _img_g=SDL_LoadBMP("img/g.bmp");
   _img_m=SDL_LoadBMP("img/m.bmp");  
+  _img_p=SDL_LoadBMP("img/p.bmp");  
+  _img_theta=SDL_LoadBMP("img/theta.bmp");    
   _img_pi=SDL_LoadBMP("img/pi.bmp");   
   _img_superior=SDL_LoadBMP("img/>.bmp");     
   _img_plus=SDL_LoadBMP("img/+.bmp");   
@@ -116,7 +120,8 @@ CharPutter::CharPutter(SDL_Surface* ecran, SDL_Surface* display, int dim_X, int 
   _img_guillemet=SDL_LoadBMP("img/\".bmp"); 
   _img_accoladedroite=SDL_LoadBMP("img/}.bmp"); 
   _img_accoladegauche=SDL_LoadBMP("img/{.bmp");  
-  _img_v=SDL_LoadBMP("img/v.bmp");  
+  _img_v=SDL_LoadBMP("img/v.bmp"); 
+  _img_w=SDL_LoadBMP("img/w.bmp");   
   _img_x=SDL_LoadBMP("img/x.bmp");
   _img_c=SDL_LoadBMP("img/c.bmp");  
   _img_virgule=SDL_LoadBMP("img/,.bmp");    
@@ -153,6 +158,8 @@ _heightCurentlyUsed++;
 
 void CharPutter::putChar(char c, int x, int y, bool invert)
 {
+  if (y<0 or y>8)
+    return;
   SDL_Rect pos;
       pos.x=(x-1)*6;
       pos.y=(y-1)*8;
@@ -231,12 +238,17 @@ SDL_BlitSurface(_voidchar, NULL, _ecran, &pos);
 	loadCharpix('t',_img_t)		
 	loadCharpix('n',_img_n)	
 	loadCharpix('l',_img_l)	
+	loadCharpix('y',_img_y)	
+	loadCharpix('h',_img_h)
+	loadCharpix('p',_img_p)	
 	loadCharpix('r',_img_r)
+	loadCharpix(CONST_CHAR_THETA,_img_theta)	
 	loadCharpix('m',_img_m)
 	loadCharpix('g',_img_g)	
 	loadCharpix('b',_img_b)
 	loadCharpix('d',_img_d)
 	loadCharpix('f',_img_f)	
+	loadCharpix('w',_img_w)		
 	loadCharpix('x',_img_x)
 	loadCharpix('c',_img_c)	
 	loadCharpix('\"',_img_guillemet)
@@ -309,6 +321,7 @@ SDL_BlitSurface(_voidchar, NULL, _ecran, &pos);
 
 int CharPutter::putString(string s, int x, int y,bool invert)
 {
+  
   if (s.size()==0)
     return y+1;
  for (int i=0;i<s.size();i++)

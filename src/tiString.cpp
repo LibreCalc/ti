@@ -29,16 +29,16 @@ map<specialChars,string> init_const()
   map<specialChars,string> res;
   res.insert(pair<specialChars,string>(CONST_SPE_SIN,string("sin(")));
   res.insert(pair<specialChars,string>(CONST_SPE_IF,string("If ")));
-  res.insert(pair<specialChars,string>(CONST_SPE_END,string("End ")));   
-  res.insert(pair<specialChars,string>(CONST_SPE_THEN,string("Then ")));  
-  res.insert(pair<specialChars,string>(CONST_SPE_ELSE,string("Else ")));    
+  res.insert(pair<specialChars,string>(CONST_SPE_END,string("End")));   
+  res.insert(pair<specialChars,string>(CONST_SPE_THEN,string("Then")));  
+  res.insert(pair<specialChars,string>(CONST_SPE_ELSE,string("Else")));    
   res.insert(pair<specialChars,string>(CONST_SPE_WHILE,string("While ")));   
   res.insert(pair<specialChars,string>(CONST_SPE_OUTPUT,string("Output(")));    
   res.insert(pair<specialChars,string>(CONST_SPE_CLEARHOME,string("ClrHome")));    
   res.insert(pair<specialChars,string>(CONST_SPE_RANDINT,string("RandInt(")));  
   res.insert(pair<specialChars,string>(CONST_SPE_AND,string(" And "))); 
   res.insert(pair<specialChars,string>(CONST_SPE_OR,string(" Or ")));   
-  res.insert(pair<specialChars,string>(CONST_SPE_GETKEY,string("GetKey ")));  
+  res.insert(pair<specialChars,string>(CONST_SPE_GETKEY,string("GetKey")));  
   res.insert(pair<specialChars,string>(CONST_SPE_FOR,string("For("))); 
   res.insert(pair<specialChars,string>(CONST_SPE_LABEL,string("Lbl "))); 
   res.insert(pair<specialChars,string>(CONST_SPE_GOTO,string("Goto ")));
@@ -209,4 +209,10 @@ void TiString::operator=(const TiString& other)
 {
  _data=other._data;
 }
+
+TiString::TiString(int character)
+{
+_data.clear();_data.push_back(character);
+}
+
 

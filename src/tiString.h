@@ -29,6 +29,7 @@ public:
   TiString();
   TiString(const TiString &other);
   ~TiString();
+  TiString  (int character);
   TiString(string s);  
   string toStdString();
   int size() const;

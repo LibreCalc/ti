@@ -18,5 +18,6 @@
 #define H83P_READ_WRITE_H
 
 vector<TiString> read83pFile(string loc);
+void write83pFile(string loc, vector<TiString> program);
 
 #endif
