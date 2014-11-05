@@ -107,7 +107,9 @@ private:
   SDL_Surface *_img_P;   
   SDL_Surface *_img_crochetgauche;   
   SDL_Surface *_img_crochetdroit; 
-  SDL_Surface *_img_superior;   
+  SDL_Surface *_img_superior; 
+  SDL_Surface *_img_inferior;   
+  SDL_Surface *_img_inferiorEq;   
   SDL_Surface *_img_degree;    
   SDL_Surface *_img_plus;
   SDL_Surface *_img_rightParenthesis; 

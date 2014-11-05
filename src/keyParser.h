@@ -21,20 +21,20 @@
 #define CONST_CHAR_STO '$'
 #define CONST_CHAR_DIFFERENT '~'
 #define CONST_CHAR_GREATEROREQUAL (char)(-100)
-#define CONST_CHAR_LESSOREQUAL (char)(-101)
 #define CONST_CHAR_DEGREE (char)(-101)
 #define CONST_CHAR_EPOW10 (char)(-102)
 #define CONST_CHAR_TRANSPOSE (char)(-103)
 #define CONST_CHAR_SMALL_MINUS (char)(-104)
 #define CONST_CHAR_PI (char)(-105)
 #define CONST_CHAR_THETA (char)(-106)
-#define CONST_CHAR_LUSER (char)(-130)
+#define CONST_CHAR_LUSER (char)(-123)
 #define CONST_CHAR_SMALL4 (char)(-116)
 #define CONST_CHAR_SMALL5 (char)(-117)
 #define CONST_CHAR_SMALL6 (char)(-118)
 #define CONST_CHAR_SMALL7 (char)(-119)
 #define CONST_CHAR_SMALL8 (char)(-120)
 #define CONST_CHAR_SMALL9 (char)(-121)
+#define CONST_CHAR_LESSOREQUAL (char)(-122)
 
 namespace keyParser {
 bool isChar(SDL_keysym k);

@@ -93,7 +93,8 @@ CharPutter::CharPutter(SDL_Surface* ecran, SDL_Surface* display, int dim_X, int 
   _img_p=SDL_LoadBMP("img/p.bmp");  
   _img_theta=SDL_LoadBMP("img/theta.bmp");    
   _img_pi=SDL_LoadBMP("img/pi.bmp");   
-  _img_superior=SDL_LoadBMP("img/>.bmp");     
+  _img_superior=SDL_LoadBMP("img/>.bmp");
+  _img_inferior=SDL_LoadBMP("img/<.bmp");  
   _img_plus=SDL_LoadBMP("img/+.bmp");   
   _img_twoDots=SDL_LoadBMP("img/:.bmp");  
   _img_smallone=SDL_LoadBMP("img/small1.bmp");   
@@ -116,7 +117,8 @@ CharPutter::CharPutter(SDL_Surface* ecran, SDL_Surface* display, int dim_X, int 
   _img_pow=SDL_LoadBMP("img/^.bmp");  
   _img_0=SDL_LoadBMP("img/0.bmp"); 
   _img_degree=SDL_LoadBMP("img/°.bmp");   
-  _img_sto=SDL_LoadBMP("img/sto.bmp");  
+  _img_sto=SDL_LoadBMP("img/sto.bmp"); 
+  _img_inferiorEq=SDL_LoadBMP("img/inferiorEq.bmp");   
   _img_guillemet=SDL_LoadBMP("img/\".bmp"); 
   _img_accoladedroite=SDL_LoadBMP("img/}.bmp"); 
   _img_accoladegauche=SDL_LoadBMP("img/{.bmp");  
@@ -259,13 +261,15 @@ SDL_BlitSurface(_voidchar, NULL, _ecran, &pos);
 	loadCharpix('}',_img_accoladedroite)
 	loadCharpix('!',_img_exclamation)	
 	loadCharpix(',',_img_virgule)	
-	loadCharpix('>',_img_superior)	
+	loadCharpix('>',_img_superior)
+	loadCharpix('<',_img_inferior)
+	loadCharpix(CONST_CHAR_LESSOREQUAL,_img_inferiorEq);
 	loadCharpix(CONST_CHAR_DEGREE,_img_degree)	
 	loadCharpix(CONST_CHAR_PI,_img_pi)	
 	loadCharpix(CONST_CHAR_SMALL5,_img_smallfive)	
 	loadCharpix(CONST_CHAR_SMALL6,_img_smallsix)
 	loadCharpix(CONST_CHAR_SMALL7,_img_smallseven)	
-	loadCharpix(CONST_CHAR_SMALL8,_img_smallheight)
+	loadCharpix(CONST_CHAR_SMALL8,_img_smallheight)	
 // 	loadCharpix(CONST_CHAR_SMALL9,_img_smallnine)				
     case CONST_CHAR_STO: 
       SDL_BlitSurface(_img_sto, NULL, _ecran, &pos);      

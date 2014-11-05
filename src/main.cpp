@@ -97,7 +97,7 @@ main(int argc, char **argv) {
     Menu menuPrgrm(&charput,titlesPrgrm,choicesPgrm);
     CurveRangeEditor rangeEdit(&charput,&conf);
     TiBasicEditor editor(&charput,&conf);
-    editor.setProgramm(read83pFile("working/"+programsFiles[0]));
+    //editor.setProgramm(read83pFile("working/"+programsFiles[0]));
 
     charput.clear();
     vector<TiString> program;
@@ -172,7 +172,7 @@ main(int argc, char **argv) {
 // 		  cout<<":"<<program[i].toStdString()<<endl;
 
                     if (menuPrgrm.getSelectedTitle()==0)
-                    {	SDL_EnableKeyRepeat(1,75);
+                    {	SDL_EnableKeyRepeat(1,50);
                         TiParser parser(&charput,conf);
                         parser.execProgram(program);
                         ms.setBuffer(charput.getBuffer());
@@ -186,7 +186,7 @@ main(int argc, char **argv) {
 		        SDL_EnableKeyRepeat(1,150);
                         mode=1;
                         ms.reDisplay();
-                        editor.setProgramm(program);
+                        editor.setProgramm(program,"working/"+programsFiles[menuPrgrm.getSelectedItem()]);
                         mode=6;
                         editor.reDisplay();
                     }
@@ -196,7 +196,7 @@ main(int argc, char **argv) {
                 {
 		        SDL_EnableKeyRepeat(0,20);
                         mode=1;
-			//TODO need to save the programm;
+			editor.saveProgram();
                         ms.reDisplay();
                 }
                 else if(event.key.keysym.sym==SDLK_ESCAPE)

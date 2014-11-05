@@ -279,13 +279,187 @@ return res;
 
 void write83pFile(string loc, vector< TiString > program)
 {
+    using std::ifstream;
+    using std::ofstream;
+    ofstream myfile(loc.c_str(), std::ios::binary);
+    char c;
+    for (int i=0; i<=71; i++)
+        myfile.put(0);
 
-  for (int i=0;i<program.size();i++)
-  {
-   for (int j=0;j<program[i].size();j++)
-   {
-     
-   }
-    
-  }
+    for (int i=0; i<program.size(); i++)
+    {
+        for (int j=0; j<program[i].size(); j++)
+        {
+            switch (program[i][j])
+            {
+            case CONST_SPE_CLEARHOME:
+                myfile.put(-31);break;
+            case ' ':
+                myfile.put(41);break;
+	    case CONST_SPE_IF:
+                 myfile.put(-50);break;
+	    case CONST_SPE_OUTPUT:
+	       myfile.put(-32);  break;
+	    case ',':
+	       myfile.put(43);  break;
+	    case '=':
+	       myfile.put(106);  break;
+	    case '\"':
+	       myfile.put(42);  break;	
+	    case CONST_CHAR_STO:
+	       myfile.put(4);  break;
+	    case CONST_SPE_GETKEY:
+	       myfile.put(-83);  break;	       
+	    case CONST_SPE_LABEL:
+	       myfile.put(-42);  break;	 
+	    case CONST_SPE_FOR:
+	       myfile.put(-45);  break;		       
+	    case CONST_SPE_OR:
+	       myfile.put(60);  break;	
+	    case CONST_SPE_DISP:
+	       myfile.put(-34);  break;	
+	    case CONST_CHAR_SMALL_MINUS:
+	       myfile.put(-80);  break;	
+	    case CONST_CHAR_PI:
+	       myfile.put(-84);  break;		       
+	    case CONST_SPE_MENU:
+	       myfile.put(-26);  break;	
+	    case CONST_CHAR_THETA:
+	       myfile.put(91);  break;	
+	    case CONST_SPE_RANDINT:
+	       myfile.put(-69);myfile.put(10);  break;	
+	    case '-':
+	       myfile.put(113);  break;	
+	    case '*':
+	       myfile.put(-126);  break;	
+	    case '/':
+	       myfile.put(-125);  break;
+	    case '?':
+	       myfile.put(-81);  break;
+	    case '|':
+	       myfile.put(22);  break;
+	    case '[':
+	       myfile.put(6);  break;
+	    case ']':
+	       myfile.put(7);  break;
+	    case '{':
+	       myfile.put(8);  break;
+	    case '}':
+	       myfile.put(9);  break;	       
+	    case CONST_SPE_RAND:
+	       myfile.put(-85);  break;	
+	    case CONST_SPE_REPEAT:
+	       myfile.put(-46);  break;	
+	    case CONST_SPE_INT:
+	       myfile.put(-79);  break;	
+	    case CONST_SPE_DIM:
+	       myfile.put(-75);  break;	
+	    case CONST_SPE_FILL:
+	       myfile.put(-30);  break;
+	    case CONST_SPE_INPUT:
+	       myfile.put(-36);  break;
+	    case CONST_SPE_MATA:
+	       myfile.put(92);myfile.put(0);  break;
+	    case CONST_SPE_MATB:
+	       myfile.put(92);myfile.put(1);  break;
+	    case CONST_SPE_MATC:
+	       myfile.put(92);myfile.put(2);  break;	 
+	    case CONST_SPE_MATD:
+	       myfile.put(92);myfile.put(3);  break;
+	    case CONST_SPE_MATE:
+	       myfile.put(92);myfile.put(4);  break;
+	    case CONST_SPE_MATF:
+	       myfile.put(92);myfile.put(5);  break;
+	    case CONST_SPE_MATG:
+	       myfile.put(92);myfile.put(6);  break;
+	    case CONST_SPE_MATH:
+	       myfile.put(92);myfile.put(7);  break;	
+	    case CONST_SPE_MATI:
+	       myfile.put(92);myfile.put(8);  break;		       
+	    case CONST_SPE_L1:
+	       myfile.put(93);myfile.put(0);  break;
+	    case CONST_SPE_L2:
+	       myfile.put(93);myfile.put(1);  break;
+	    case CONST_SPE_L3:
+	       myfile.put(93);myfile.put(2);  break;
+	    case CONST_SPE_L4:
+	       myfile.put(93);myfile.put(3);  break;	
+	    case CONST_SPE_L5:
+	       myfile.put(93);myfile.put(4);  break;
+	    case CONST_SPE_L6:
+	       myfile.put(93);myfile.put(5);  break;
+	    case CONST_SPE_L7:
+	       myfile.put(93);myfile.put(6);  break;	
+	    case CONST_SPE_L8:
+	       myfile.put(93);myfile.put(7);  break;	
+	    case CONST_SPE_L9:
+	       myfile.put(93);myfile.put(8);  break;		       
+	    case CONST_CHAR_LUSER:
+	       myfile.put(-21);  break;	
+	    case CONST_SPE_CLRLIST:
+	       myfile.put(-6);  break;
+	    case CONST_CHAR_DEGREE:
+	       myfile.put(11);  break;
+	    case '(':
+	       myfile.put(16);  break;
+	    case CONST_SPE_AND:
+	       myfile.put(64);  break;
+	    case CONST_CHAR_DIFFERENT:
+	      myfile.put(111);  break;
+	    case ')':
+	      myfile.put(17);  break;	      
+	    case '+':
+	      myfile.put(112);  break;	
+	    case '!':
+	      myfile.put(45);  break;
+	    case '.':
+	      myfile.put(58);  break;	      
+	    case CONST_SPE_GOTO:
+	      myfile.put(-41);  break;
+	    case CONST_SPE_ROUND:
+	      myfile.put(18);  break;
+	    case CONST_SPE_STOP:
+	      myfile.put(-39);  break;	      
+	    case CONST_SPE_THEN:
+	      myfile.put(-49);  break;	
+	    case CONST_SPE_ELSE:
+	      myfile.put(-48);  break;	
+	    case CONST_SPE_END:
+	      myfile.put(-44);  break;	
+	    case CONST_SPE_WHILE:
+	      myfile.put(-47);  break;
+	    case CONST_SPE_RETURN:
+	      myfile.put(-43);  break;	      
+	    case '^':
+	      myfile.put(-16);  break;
+	    case '<':
+	      myfile.put(107);  break;
+	    case CONST_CHAR_GREATEROREQUAL:
+	      myfile.put(110);  break;
+	    case CONST_CHAR_LESSOREQUAL:
+	      myfile.put(109);  break;	      
+	    //TODO transpose
+	    case CONST_SPE_NOT:
+	      myfile.put(-72);  break;	  
+	    case CONST_CHAR_EPOW10:
+	      myfile.put(59);  break;		      
+	    case CONST_SPE_ANS:
+	      myfile.put(114);  break;
+	    case '>':
+	      myfile.put(108);  break;
+	    case CONST_SPE_PAUSE:
+	      myfile.put(-40);  break;
+
+            default:
+                if ((program[i][j]>='0' and program[i][j]<='9')
+                        or program[i][j]>='A' and program[i][j]<='Z' )
+                    myfile.put(program[i][j]);
+
+                break;
+
+            }
+        }
+
+        myfile.put(62);
+    }
 }

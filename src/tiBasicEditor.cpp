@@ -1,5 +1,23 @@
+/*
+  Copyright (c) 2014 Pierre Parent
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 #include "tiBasicEditor.h"
 #include "keyParser.h"
+#include "83pReadWrite.h"
 
 #include <iostream>
 
@@ -67,7 +85,7 @@ if (up)
  }
  else
  {
-     if (_currentLine<_currentProgram.size())
+     if (_currentLine<_currentProgram.size()-1)
   {
    _currentLine++;
    _currentCursPos=0;
@@ -124,6 +142,7 @@ TiString & eq=_currentProgram[_currentLine];
 
 void TiBasicEditor::addLine()
 {
+  _currentCursPos=0;
 _currentProgram.insert(_currentProgram.begin()+_currentLine,TiString(""));
 }
 
@@ -191,22 +210,55 @@ _conf=conf;
 _currentLine=0;
 _currentCursPos=0;
 _currentDisplayoffset=0;
-vector<TiString> choices;
-choices.push_back(TiString(CONST_SPE_IF));
-choices.push_back(TiString(CONST_SPE_THEN));
-choices.push_back(TiString(CONST_SPE_ELSE));
-choices.push_back(TiString(CONST_SPE_END));
-choices.push_back(TiString(CONST_SPE_AND));
-choices.push_back(TiString(CONST_SPE_OR));
-choices.push_back(TiString(CONST_SPE_WHILE));
-choices.push_back(TiString(CONST_SPE_RAND));
-choices.push_back(TiString(CONST_SPE_DISP));
-choices.push_back(TiString(CONST_SPE_OUTPUT));
-_specialsCommandsMenu=new Menu(_putt,TiString("Special Words"),choices);
+vector<TiString> choicesCTRL;
+choicesCTRL.push_back(TiString(CONST_SPE_IF));
+choicesCTRL.push_back(TiString(CONST_SPE_THEN));
+choicesCTRL.push_back(TiString(CONST_SPE_ELSE));
+choicesCTRL.push_back(TiString(CONST_SPE_END));
+choicesCTRL.push_back(TiString(CONST_SPE_WHILE));
+choicesCTRL.push_back(TiString(CONST_SPE_REPEAT));
+choicesCTRL.push_back(TiString(CONST_SPE_FOR));
+choicesCTRL.push_back(TiString(CONST_SPE_GOTO));
+choicesCTRL.push_back(TiString(CONST_SPE_LABEL));
+choicesCTRL.push_back(TiString(CONST_SPE_PAUSE));
+choicesCTRL.push_back(TiString(CONST_SPE_RAND));
+choicesCTRL.push_back(TiString(CONST_SPE_RANDINT));
+
+vector<TiString> choicesCMP;
+choicesCMP.push_back(TiString("="));
+choicesCMP.push_back(TiString("<"));
+choicesCMP.push_back(TiString(">"));
+choicesCMP.push_back(TiString(CONST_CHAR_LESSOREQUAL));
+choicesCMP.push_back(TiString(CONST_SPE_AND));
+choicesCMP.push_back(TiString(CONST_SPE_OR));
+choicesCMP.push_back(TiString(CONST_SPE_NOT));
+
+vector<TiString> choicesDISP;
+choicesDISP.push_back(TiString(CONST_SPE_DISP));
+choicesDISP.push_back(TiString(CONST_SPE_OUTPUT));
+choicesDISP.push_back(TiString(CONST_SPE_CLEARHOME));
+choicesDISP.push_back(TiString(CONST_SPE_INPUT));
+choicesDISP.push_back(TiString(CONST_SPE_GETKEY));
+
+vector< vector<TiString> > choices;
+choices.push_back(choicesCTRL);choices.push_back(choicesCMP);
+choices.push_back(choicesDISP);
+
+vector<TiString> titles;titles.push_back(TiString("Ctr"));titles.push_back(TiString("Cmp"));
+titles.push_back(TiString("I/O"));
+_specialsCommandsMenu=new Menu(_putt,titles,choices);
 _isInSpecialCommandsMenu=false;
 }
 
-void TiBasicEditor::setProgramm(vector< TiString > program)
+void TiBasicEditor::setProgramm(vector< TiString > program, string loc)
 {
 _currentProgram=program;
+_currentLine=0;
+_currentCursPos=0;
+_programFileLoc=loc;
+}
+
+void TiBasicEditor::saveProgram()
+{
+write83pFile(_programFileLoc, _currentProgram);
 }
