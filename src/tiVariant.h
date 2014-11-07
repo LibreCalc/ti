@@ -32,10 +32,12 @@ public:
   TiVariant(double re,double im);
   TiVariant(string s);
   TiVariant(vector<TiVariant> list);
+  TiVariant(vector<vector<TiVariant > > matrix);  
   TiVariant();
   
   double toDouble();
   string toString();
+  string toStringWithoutQuote();  
   TiVariant getDim();
   
   TiVariant operator+(const TiVariant & other);

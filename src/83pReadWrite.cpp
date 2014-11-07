@@ -228,6 +228,44 @@ while(ifs.get(c_u)){
 	tmp.push_back(CONST_SPE_PAUSE);break;        
       case 95:
       printf("Pause  ");break; 
+      case -123:
+       tmp.push_back(CONST_SPE_CLEARDRAW);break;      
+      case 126:
+        ifs.get(c_u); c=c_u;
+	if (c==9)
+	    {tmp.push_back(CONST_SPE_AXEOFF);break;} 
+	cout<<"Erreur pasing 126 "<<int(c) <<endl;
+	exit(0);	    
+      case 99:
+        ifs.get(c_u); c=c_u;
+	if (c==12)
+	    {tmp.push_back(CONST_SPE_YMIN);break;} 
+	if (c==13)
+	    {tmp.push_back(CONST_SPE_YMAX);break; }
+      	if (c==11)
+	    {tmp.push_back(CONST_SPE_XMAX);break; } 
+      	if (c==10)
+	    {tmp.push_back(CONST_SPE_XMIN);break; } 	    
+	cout<<"Erreur pasing 99 "<<int(c) <<endl;
+	exit(0);
+      case -100:
+	  tmp.push_back(CONST_SPE_LINE); break;
+      case -104:
+	  tmp.push_back(CONST_SPE_STOREPIC); break;
+      case -103:
+	  tmp.push_back(CONST_SPE_RECALLPIC); break;	 
+      case -109:
+	  tmp.push_back(CONST_SPE_TEXT); break;
+      case 19:
+	  tmp.push_back(CONST_SPE_PIXEL_TEST); break;		  
+      case 96:
+	ifs.get(c_u); c=c_u;
+         if (c==0)
+            {
+                tmp.push_back(CONST_SPE_PIC1);
+                break;
+            }
+	cout<<"Erreur pasing 96 "<<c <<endl;
       //TODO end of programm?
 //       case  -6:
 // 	//res.push_back(tmp);tmp.clear();
@@ -449,6 +487,30 @@ void write83pFile(string loc, vector< TiString > program)
 	      myfile.put(108);  break;
 	    case CONST_SPE_PAUSE:
 	      myfile.put(-40);  break;
+	    case CONST_SPE_CLEARDRAW:
+	      myfile.put(-123);  break;
+	    case CONST_SPE_AXEOFF:
+	      myfile.put(126);myfile.put(9);  break;
+	    case CONST_SPE_YMIN:
+	      myfile.put(99);myfile.put(12);  break;	      
+	    case CONST_SPE_YMAX:
+	      myfile.put(99);myfile.put(13);  break;
+	    case CONST_SPE_XMAX:
+	      myfile.put(99);myfile.put(11);  break;
+	    case CONST_SPE_XMIN:
+	      myfile.put(99);myfile.put(10);  break;	      
+	    case CONST_SPE_LINE:
+	      myfile.put(-100);  break;
+	    case CONST_SPE_STOREPIC:
+	      myfile.put(-104);  break;	      
+	    case CONST_SPE_RECALLPIC:
+	      myfile.put(-103);  break;	   
+	    case CONST_SPE_PIC1:
+	      myfile.put(96);myfile.put(0);  break;	
+	    case CONST_SPE_TEXT:
+	      myfile.put(-109);  break;		      
+	    case CONST_SPE_PIXEL_TEST:
+	      myfile.put(19);  break;
 
             default:
                 if ((program[i][j]>='0' and program[i][j]<='9')

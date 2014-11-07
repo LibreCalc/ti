@@ -189,6 +189,74 @@ ligne (SDL_Surface *ecran,int x0, int y0, int x1, int y1)
 }
 
 
+void 
+whiteLigne (SDL_Surface *ecran,int x0, int y0, int x1, int y1)
+{
+  Uint32 c=SDL_MapRGBA(ecran->format, 255, 255, 255, 255);
+  int dx, dy, x, y, residu, absdx, absdy, pasx, pasy, i;
+  dx = x1 - x0;
+  dy = y1 - y0;
+  residu = 0;			/* il s’agit d’une division euclidienne, avec quotient et reste */
+  x = x0;
+  y = y0;
+  definirPixel(ecran,x,y, c);
+  if (dx > 0)
+    pasx = 1;
+  else
+    pasx = -1;
+  if (dy > 0)
+    pasy = 1;
+  else
+    pasy = -1;
+  absdx = abs (dx);
+  absdy = abs (dy);
+  if (dx == 0)
+    for (i = 0; i < absdy; i++)
+      {
+	y += pasy;
+	definirPixel(ecran,x, y, c);
+      }
+/* segment vertical, vers le haut ou vers l bas */
+  else if (dy == 0)
+    for (i = 0; i < absdx; i++)
+      {
+	x += pasx;
+	definirPixel(ecran,x, y, c);
+      }
+/* segment horizontal, vers la droite ou vers la gauche */
+  else if (absdx == absdy)
+    for (i = 0; i < absdx; i++)
+      {
+	x += pasx;
+	y += pasy;
+	definirPixel(ecran,x, y, c);
+      }
+/* segment diagonal dans les 4 cas possibles */
+  else if (absdx > absdy)	/* pente douce */
+    for (i = 0; i < absdx; i++)
+      {
+	x += pasx;
+	residu += absdy;
+	if (residu >= absdx)
+	  {
+	    residu -= absdx;
+	    y += pasy;
+	  }
+	definirPixel(ecran,x, y, c);
+      }
+  else
+    for (i = 0; i < absdy; i++)	/* pente forte */
+      {
+	y += pasy;
+	residu += absdx;
+	if (residu >= absdy)
+	  {
+	    residu -= absdy;
+	    x += pasx;
+	  }
+	definirPixel(ecran,x, y, c);
+      }
+}
 
 void adaptSurface(SDL_Surface* toAdapt, SDL_Surface* output, int x1, int x2, int y1, int y2)
 { 
@@ -249,7 +317,7 @@ void adaptSurface(SDL_Surface* toAdapt, SDL_Surface* output, int x1, int x2, int
    
    free(blackRect);
    free(whiteRect);   
-   if (diff>0)
+   if (diff>1)
      cout<<"Warning resizing window is too slow: it took "<<diff<<" ms"<<endl;
 }
 

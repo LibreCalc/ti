@@ -37,6 +37,10 @@ public:
  void clear();
  void refreshScreen();
  string getBuffer();
+ 
+ //WARNING Temparary
+ SDL_Surface *getDisplay();
+ SDL_Surface *getScreen(); 
 private:
   int _dim_X;
   int _dim_Y;

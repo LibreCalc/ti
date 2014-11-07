@@ -399,3 +399,15 @@ for (int i=0;i<_heightCurentlyUsed;i++)
 return s;
 }
 
+SDL_Surface* CharPutter::getDisplay()
+{
+return _display;
+}
+
+SDL_Surface* CharPutter::getScreen()
+{
+return _ecran;
+}
+
+
+

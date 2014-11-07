@@ -25,7 +25,7 @@
 
 using namespace std;
 
-TiParser::TiParser(CharPutter* charPutter,TiConfig &conf):_conf(conf)
+TiParser::TiParser(CharPutter* charPutter,TiConfig &conf):_conf(conf),_canvas(conf,charPutter->getScreen(),charPutter->getDisplay())
 {
 _charPutter=charPutter;
 _key=0;
@@ -131,7 +131,31 @@ void TiParser::exec(vector< TiString >& program, int start, int end)
   {
   /* cout<<"Clearhome"<<endl;*/;_charPutter->refreshScreen();/*SDL_Delay(39);*/ _charPutter->clear(); needToRefresh();continue;
   }  
+  
+  if (program[start][0]==CONST_SPE_CLEARDRAW)
+  {
+   _canvas.clearDraw();continue;
+  }    
     
+  if (program[start][0]==CONST_SPE_LINE)
+  {
+  handleLine(program[start]);continue;
+  }   
+
+  if (program[start][0]==CONST_SPE_STOREPIC and program[start].size()>1)
+  {
+  _canvas.storePic(program[start][1]);continue;
+  }  
+  
+  if (program[start][0]==CONST_SPE_RECALLPIC and program[start].size()>1)
+  {
+  _canvas.recalPic(program[start][1]);continue;
+  }    
+  
+  if (program[start][0]==CONST_SPE_TEXT)
+  {
+   handleText(program[start]);continue;
+  }     
   /****************************************************************
    * 	While
    * ****************************************************************/
@@ -386,7 +410,7 @@ for (int i=0;i<strs.size();i++)
     }
     else
     {
-      _charPutter->disp(removeQuote(eval(strs[i],0,_conf).toString()));
+      _charPutter->disp(removeQuote(eval(strs[i],_conf.getVariableValue('X'),_conf).toString()));
     }
       
   }
@@ -502,9 +526,9 @@ void TiParser::handleInput(TiString s)
 	      if (event.key.keysym.sym==SDLK_RETURN and buff.size()>0)
 	      {
 		if (strs.size()==2)
-		  _conf.setVariableValue(strs[1][0],eval(buff,0,_conf));
+		  _conf.setVariableValue(strs[1][0],eval(buff,_conf.getVariableValue('X'),_conf));
 		else
-		  _conf.setVariableValue(strs[0][0],eval(buff,0,_conf));
+		  _conf.setVariableValue(strs[0][0],eval(buff,_conf.getVariableValue('X'),_conf));
 		SDL_EnableKeyRepeat(1,75);
 		return;
 	      }
@@ -536,5 +560,60 @@ void TiParser::handleFill(TiString s)
         return;
     }
     _conf.getVariable(strs[1][0]).fill(eval(strs[0],_conf.getVariableValue('X'),_conf));
+}
+
+void TiParser::handleLine(TiString s)
+{
+    if (s.size()<3)
+        return;
+    s.erase(0);
+    if (s[s.size()-1]==')')
+        s.erase(s.size()-1);
+    vector<TiString> strs=evalFormula::ParseComas(s);
+    double x1,x2,y1,y2;
+    if (strs.size()==4 or strs.size()==5)
+    {
+      x1=eval(strs[0],_conf.getVariableValue('X'),_conf).toDouble();
+      y1=eval(strs[1],_conf.getVariableValue('X'),_conf).toDouble();
+      x2=eval(strs[2],_conf.getVariableValue('X'),_conf).toDouble();
+      y2=eval(strs[3],_conf.getVariableValue('X'),_conf).toDouble();
+      _canvas.line(x1,y1,x2,y2);  
+  
+   
+      if (strs.size()==4 or eval(strs[4],_conf.getVariableValue('X'),_conf).toDouble())
+	 _canvas.line(x1,y1,x2,y2);  
+      else
+	 _canvas.whiteLine(x1,y1,x2,y2);  
+      return;
+    }
+    
+    cout<<"Erreur LINE "<<strs.size()<<endl;
+	for (int i=0;i<strs.size();i++)
+	  cout<<strs[i].toStdString()<<endl;
+        return;
+    
+}
+
+void TiParser::handleText(TiString s)
+{
+    if (s.size()<3)
+        return;
+    s.erase(0);
+    if (s[s.size()-1]==')')
+        s.erase(s.size()-1);
+    vector<TiString> strs=evalFormula::ParseComas(s);
+    if (strs.size()<3)
+    {
+     cout<<"Problème TEXT"<<endl; 
+    }
+    int x,y; 
+    x=eval(strs[1],_conf.getVariableValue('X'),_conf).toDouble();
+    y=eval(strs[0],_conf.getVariableValue('X'),_conf).toDouble();    
+    string str;
+    for (int i=2;i<strs.size();i++)
+    {
+      str=str+eval(strs[i],_conf.getVariableValue('X'),_conf).toStringWithoutQuote();
+    }
+    _canvas.text(x,y,str);
 }
 

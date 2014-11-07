@@ -71,16 +71,13 @@ TiVariant eval(TiString s, TiVariant x, TiConfig& config)
    return TiVariant(double(1.0*rand()/RAND_MAX));
  }
  
-   /*-------------------------------------------
-  *  Check small minus
-  * -------------------------------------------*/ 
-   if (s.size()>1 and s[0]==CONST_CHAR_SMALL_MINUS)
-     return TiVariant(0.0)-eval(s.subString(1,s.size()),x,config);
+
  
    /*-------------------------------------------
   *  Check fonctions
   * -------------------------------------------*/
-#define FONCTIONS_PAR  s[i]==CONST_SPE_SIN or s[i]==CONST_SPE_RANDINT or s[i]==CONST_SPE_NOT or s[i]==CONST_SPE_INT
+   //WARNING to update
+#define FONCTIONS_PAR  s[i]==CONST_SPE_SIN or s[i]==CONST_SPE_RANDINT or s[i]==CONST_SPE_NOT or s[i]==CONST_SPE_INT or s[i]==CONST_SPE_DIM  or s[i]==CONST_SPE_PIXEL_TEST
   if (isSuroundedByParFct(s,CONST_SPE_SIN))
     return  sin(eval(s.subString(1,s.size()-1),x,config).toDouble());
   if (isSuroundedByParFct(s,CONST_SPE_RANDINT))
@@ -93,6 +90,8 @@ TiVariant eval(TiString s, TiVariant x, TiConfig& config)
    { double val=eval(s.subString(1,s.size()-1),x,config).toDouble();return  TiVariant(round(val));}   
   if (isSuroundedByParFct(s,CONST_SPE_DIM))
     return  eval(s.subString(1,s.size()-1),x,config).getDim();
+  if (isSuroundedByParFct(s,CONST_SPE_PIXEL_TEST))
+    return handlePixelTest(s.subString(1,s.size()-1),x.toDouble(),config);
  
 
   
@@ -129,6 +128,26 @@ TiVariant eval(TiString s, TiVariant x, TiConfig& config)
    }
    return TiVariant(listres);
  }
+ 
+   /*---------------------------------------------------------
+  * S'il s'agit d'une matrixe renvoit cette derniere
+  * --------------------------------------------------*/
+ vector<vector<TiString> > mat;
+ if (isMatrix(s,mat))
+ {
+  vector<vector<TiVariant> > res;
+  vector<TiVariant>  tmpRow; 
+  for (int i=0;i<mat.size();i++)
+  {
+    tmpRow.clear();
+    for (int j=0;j<mat[i].size();j++)
+    {
+      tmpRow.push_back(eval(mat[i][j],x,config));
+    }
+    res.push_back(tmpRow);
+  }
+  return TiVariant(res);
+ } 
  
  //TODO  optimise this
    /*------------------------------------------------------------------
@@ -325,6 +344,12 @@ TiVariant eval(TiString s, TiVariant x, TiConfig& config)
     *eval(s.subString(i+1,s.size()),x,config);
   }
   
+     /*-------------------------------------------
+  *  Check small minus
+  * -------------------------------------------*/ 
+   if (s.size()>1 and s[0]==CONST_CHAR_SMALL_MINUS)
+     return TiVariant(0.0)-eval(s.subString(1,s.size()),x,config);
+   
   return TiVariant(-1);
 }
 
@@ -454,6 +479,22 @@ else
 
 }
 
+int evalFormula::handlePixelTest(TiString s,double x, TiConfig& config)
+{
+vector <TiString> strs=ParseComas(s);
+if(strs.size()!=2)
+  {
+  cout<<"Erreur fatale parsing pixelTest "<<strs.size()<<" "<<s.toStdString()<<" "<<strs[0].toStdString()<<endl; 
+  }
+else
+  {
+    int i=round(eval(strs[0],x,config).toDouble());
+    int j=round(eval(strs[1],x,config).toDouble());
+    
+    return config.isPixelXYBlack(i,j);
+  }  
+
+}
 vector< TiString > evalFormula::ParseComas(TiString s)
 {
   //TODO !! this is not correct!!
@@ -508,4 +549,45 @@ bool  evalFormula::isList(TiString s, vector< TiString >& theList)
     }
     return false;
 }
+
+bool evalFormula::isMatrix(TiString s, vector< vector< TiString > >& theMatrix)
+{
+  
+    theMatrix.clear();  
+    if (s.size()<5)
+	return false;
+	 
+    if (s[0]=='[' and s[1]=='[' and s[s.size()-1]==']')
+    {
+      int nbOfCroch=1;
+      for (int i=1;i<s.size()-1;i++)
+      {
+	if (s[i]=='[')
+	  nbOfCroch++;
+	if (s[i]==']')
+	  nbOfCroch--;
+	if (nbOfCroch<=0 or nbOfCroch>2)
+	  return false;
+      }
+
+      vector<vector<TiString> > res;
+      int lastBeginOfRow=1;
+      for (int i=1;i<s.size()-1;i++)
+      {
+	if (s[i]==']')
+	{
+	  if(i==s.size()-1 and s[i+1]!=']'and s[i+1]!='[')
+	    return false;
+	  vector<TiString> strs =ParseComas(s.subString(lastBeginOfRow+1,i));
+	  //Jump over ",["
+	  i=i+1;
+	  lastBeginOfRow=i;
+	  theMatrix.push_back(strs);
+	}
+      }
+      return true;
+    }
+    return false;
+}
+
 

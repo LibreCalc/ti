@@ -21,6 +21,7 @@
 #include <map>
 #include "tiString.h"
 #include "tiVariant.h"
+#include <SDL/SDL.h>
 
 using namespace std;
 
@@ -35,8 +36,11 @@ public:
   TiVariant getAns();
   void setAns(TiVariant Ans);
   TiString& getFunctionsToPlot(int i);
- void setFunctionToPlot(int i,TiString s);
+  void setFunctionToPlot(int i,TiString s);
+  bool isPixelXYBlack(int x, int y);
+  SDL_Surface * getCanvasScreen();
 private:
+  SDL_Surface *_screen;
   map<int,TiVariant> _variables;
   TiVariant _Ans;
   vector<TiString> _functionsToPlot;

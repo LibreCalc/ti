@@ -20,6 +20,8 @@
 #include <vector>
 #include "tiString.h"
 #include "tiConfig.h"
+#include "canvas.h"
+
 class TiParser{
   
   
@@ -36,7 +38,9 @@ private:
   void handleClearList(TiString s);    
   void handleInput(TiString s);   
   void handleMenu(TiString s);   
-  void handleFill(TiString s);     
+  void handleFill(TiString s); 
+  void handleLine(TiString s); 
+  void handleText(TiString s); 
   void checkForGetKey(TiString &s);
   void needToRefresh();
   string removeQuote(string s);
@@ -50,6 +54,7 @@ private:
   //Affichage
   bool _needToRefresh;
   CharPutter * _charPutter;  
+  Canvas _canvas;
   
   //clavier
   int _key;

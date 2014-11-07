@@ -4,7 +4,7 @@ SDL = `sdl-config --cflags --libs`
 #choix des inclusions
 
 
-ti:obj/charPutter.o obj/main.o obj/yEqualsMenu.o obj/curveViewer.o obj/handlePixels.o obj/mainScreen.o obj/evalFormula.o obj/keyParser.o obj/tiConfig.o  obj/tiString.o obj/tiBasicParser.o obj/83pReadWrite.o obj/menu.o obj/tiVariant.o obj/commandsHandler.o obj/curveRangeEditor.o obj/tiBasicEditor.o
+ti:obj/charPutter.o obj/main.o obj/yEqualsMenu.o obj/curveViewer.o obj/handlePixels.o obj/mainScreen.o obj/evalFormula.o obj/keyParser.o obj/tiConfig.o  obj/tiString.o obj/tiBasicParser.o obj/83pReadWrite.o obj/menu.o obj/tiVariant.o obj/commandsHandler.o obj/curveRangeEditor.o obj/tiBasicEditor.o obj/canvas.o
 	$(CP) $(SDL) $^ -o $@ -lm
 
 obj/main.o: src/main.cpp
@@ -41,6 +41,8 @@ obj/curveRangeEditor.o: src/curveRangeEditor.cpp
 	$(CP) src/curveRangeEditor.cpp -o $@ -c
 obj/tiBasicEditor.o: src/tiBasicEditor.cpp
 	$(CP) src/tiBasicEditor.cpp -o $@ -c	
+obj/canvas.o: src/canvas.cpp
+	$(CP) src/canvas.cpp -o $@ -c		
 	
 count:
 	find . -iname "*.cpp" -exec grep -vE '^#' {} \; | wc -l

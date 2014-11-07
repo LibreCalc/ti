@@ -18,6 +18,10 @@
 #include "keyParser.h"
 #include "constantSpecialChar.h"
 #include <iostream>
+#include "handlePixels.h"
+
+using namespace std;
+
 
   int variables[]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
 		    ,CONST_CHAR_THETA,CONST_SPE_L1,CONST_SPE_L2,CONST_SPE_L3,CONST_SPE_L4,CONST_SPE_L5,CONST_SPE_L6,CONST_SPE_L7,CONST_SPE_L8,CONST_SPE_L9,
@@ -28,6 +32,7 @@ using namespace std;
 TiConfig::TiConfig(){
   _variables.clear();
 
+  _screen=SDL_CreateRGBSurface(SDL_SWSURFACE,96,64,8,255,255,255,0);
   vector<TiVariant> titab;titab.push_back(TiVariant(3));titab.push_back(TiVariant(4));
   TiVariant mat(2);
   mat.setDim(2,2);
@@ -81,8 +86,6 @@ TiVariant& TiConfig::getVariable(int c)
   return _variables[c];
 }
 
-#include <iostream>
-using namespace std;
 bool TiConfig::isVariable(int c)
 {
   if (c>='A' and c<='Z')
@@ -105,3 +108,23 @@ void TiConfig::setAns(TiVariant Ans)
 {
 _Ans=Ans;
 }
+
+bool TiConfig::isPixelXYBlack(int y, int x)
+{
+  Uint8 r,g,b,a;
+  if (x>96 or x<1 or y>64 or y<1)
+  {
+   cout<<"Erreur getPixel"<<endl;
+   return true;
+  }
+  
+  SDL_GetRGBA(obtenirPixel(_screen, (int)(x-1),(int) (y-1)), _screen->format, &r, &g, &b, &a);
+return ((r+g+b)<300);
+}
+
+SDL_Surface* TiConfig::getCanvasScreen()
+{
+return _screen;
+}
+
+

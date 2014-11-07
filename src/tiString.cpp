@@ -76,6 +76,18 @@ map<specialChars,string> init_const()
   res.insert(pair<specialChars,string>(CONST_SPE_MATG,string("[[G]]")));  
   res.insert(pair<specialChars,string>(CONST_SPE_MATH,string("[[H]]")));  
   res.insert(pair<specialChars,string>(CONST_SPE_MATI,string("[[I]]")));    
+  res.insert(pair<specialChars,string>(CONST_SPE_CLEARDRAW,string("ClrDraw")));    
+   res.insert(pair<specialChars,string>(CONST_SPE_AXEOFF,string("AxesOff")));    
+  res.insert(pair<specialChars,string>(CONST_SPE_YMIN,string("YMin")));    
+  res.insert(pair<specialChars,string>(CONST_SPE_YMAX,string("YMax"))); 
+  res.insert(pair<specialChars,string>(CONST_SPE_XMIN,string("XMin"))); 
+  res.insert(pair<specialChars,string>(CONST_SPE_XMAX,string("XMax"))); 
+  res.insert(pair<specialChars,string>(CONST_SPE_LINE,string("Line("))); 
+  res.insert(pair<specialChars,string>(CONST_SPE_STOREPIC,string("StorePic "))); 
+  res.insert(pair<specialChars,string>(CONST_SPE_RECALLPIC,string("RecalPic ")));
+  res.insert(pair<specialChars,string>(CONST_SPE_PIC1,string("Pic1"))); 
+  res.insert(pair<specialChars,string>(CONST_SPE_TEXT,string("Text("))); 
+  res.insert(pair<specialChars,string>(CONST_SPE_PIXEL_TEST,string("pxl-Test(")));   
   return res;
 }
 

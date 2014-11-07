@@ -28,6 +28,12 @@ _type=4;
 _valueList=list;
 }
 
+TiVariant::TiVariant(vector< vector< TiVariant > > matrix)
+{
+_valueMat=matrix;
+_type=5;
+}
+
 TiVariant::TiVariant(std::string s)
 {
 _type=3;
@@ -48,6 +54,14 @@ TiVariant TiVariant::getDim()
    return TiVariant(_valueString.size());
  if (_type==4)
    return TiVariant(_valueList.size());
+ if (_type==5)
+ {
+   vector<TiVariant> list;
+   list.push_back(_valueMat.size());
+   if (_valueMat.size()>0)
+     list.push_back(_valueMat[0].size());
+   return TiVariant(list);
+ }
 }
 
 
@@ -65,6 +79,14 @@ TiVariant::TiVariant(double a)
 _type=1;
 _valueReal=a;
 }
+
+string TiVariant::toStringWithoutQuote()
+{
+   if (_type==3)
+     return _valueString;
+   return toString();
+}
+
 
 std::string TiVariant::toString()
 {

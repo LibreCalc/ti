@@ -144,6 +144,7 @@ void TiBasicEditor::addLine()
 {
   _currentCursPos=0;
 _currentProgram.insert(_currentProgram.begin()+_currentLine,TiString(""));
+reDisplay();
 }
 
 
@@ -221,6 +222,7 @@ choicesCTRL.push_back(TiString(CONST_SPE_FOR));
 choicesCTRL.push_back(TiString(CONST_SPE_GOTO));
 choicesCTRL.push_back(TiString(CONST_SPE_LABEL));
 choicesCTRL.push_back(TiString(CONST_SPE_PAUSE));
+choicesCTRL.push_back(TiString(CONST_SPE_STOP));
 choicesCTRL.push_back(TiString(CONST_SPE_RAND));
 choicesCTRL.push_back(TiString(CONST_SPE_RANDINT));
 
@@ -240,12 +242,25 @@ choicesDISP.push_back(TiString(CONST_SPE_CLEARHOME));
 choicesDISP.push_back(TiString(CONST_SPE_INPUT));
 choicesDISP.push_back(TiString(CONST_SPE_GETKEY));
 
+vector<TiString> choicesDRAW;
+choicesDRAW.push_back(TiString(CONST_SPE_CLEARDRAW));
+choicesDRAW.push_back(TiString(CONST_SPE_LINE));
+choicesDRAW.push_back(TiString(CONST_SPE_TEXT));
+choicesDRAW.push_back(TiString(CONST_SPE_PIXEL_TEST));
+choicesDRAW.push_back(TiString(CONST_SPE_STOREPIC));
+choicesDRAW.push_back(TiString(CONST_SPE_RECALLPIC));
+choicesDRAW.push_back(TiString(CONST_SPE_PIC1));
+choicesDRAW.push_back(TiString(CONST_SPE_XMIN));
+choicesDRAW.push_back(TiString(CONST_SPE_XMAX));
+choicesDRAW.push_back(TiString(CONST_SPE_YMIN));
+choicesDRAW.push_back(TiString(CONST_SPE_YMAX));
+
 vector< vector<TiString> > choices;
 choices.push_back(choicesCTRL);choices.push_back(choicesCMP);
-choices.push_back(choicesDISP);
+choices.push_back(choicesDISP);choices.push_back(choicesDRAW);
 
 vector<TiString> titles;titles.push_back(TiString("Ctr"));titles.push_back(TiString("Cmp"));
-titles.push_back(TiString("I/O"));
+titles.push_back(TiString("I/O"));titles.push_back(TiString("Draw"));
 _specialsCommandsMenu=new Menu(_putt,titles,choices);
 _isInSpecialCommandsMenu=false;
 }

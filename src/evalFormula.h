@@ -38,9 +38,11 @@ bool isSuroundedByUselessParenthesis(TiString s);
 bool isNumber(TiString s, double& theNumber);
 bool isString(TiString s, string& theNumber);
 bool isList(TiString s, vector<TiString>& theList);
+bool isMatrix(TiString s, vector<vector<TiString > >& theMatrix);
 int findCharOutsideOfParenthesis(TiString s, int c);
 bool isSuroundedByParFct(TiString s,int fct);
 int handleRandInt(TiString s,double x, TiConfig& config);
+int handlePixelTest(TiString s,double x, TiConfig& config);
 void checkForLackingParenthesis(TiString &s);
 vector<TiString> ParseComas(TiString );
 }
