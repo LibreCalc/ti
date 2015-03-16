@@ -32,7 +32,7 @@
 #include "menu.h"
 #include "curveRangeEditor.h"
 
-main(int argc, char **argv) {
+int main(int argc, char **argv) {
 
     srand (time(NULL));
     if (SDL_Init (SDL_INIT_VIDEO) < 0)
