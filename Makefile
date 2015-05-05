@@ -1,11 +1,10 @@
 #Choix du compilateur.
 CP = g++  -g
-SDL = `sdl-config --cflags --libs`
 #choix des inclusions
 
 
 ti:obj/charPutter.o obj/main.o obj/yEqualsMenu.o obj/curveViewer.o obj/handlePixels.o obj/mainScreen.o obj/evalFormula.o obj/keyParser.o obj/tiConfig.o  obj/tiString.o obj/tiBasicParser.o obj/83pReadWrite.o obj/menu.o obj/tiVariant.o obj/commandsHandler.o obj/curveRangeEditor.o obj/tiBasicEditor.o obj/canvas.o
-	$(CP) $(SDL) $^ -o $@ -lm
+	$(CP) `sdl-config --cflags` $^ -o $@ -lm `sdl-config --libs`
 
 obj/main.o: src/main.cpp
 	mkdir -p obj
